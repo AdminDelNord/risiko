@@ -2,110 +2,535 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <title>Risiko! Alleanze — Edizione Strategica Mondiale</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
-
   <style>
     :root {
-      --parchment-light: #f5edd6;
-      --parchment-mid: #e6d5ad;
+      --parchment-light: #f6eed9;
+      --parchment-mid: #e7d7b1;
       --parchment-dark: #cbb482;
       --ink-dark: #2c1e12;
       --ink-muted: #5c432c;
       --gold-accent: #c59b27;
       --crimson-box: #8b1e1e;
+      --crimson-dark: #781515;
+      --ocean-teal: #6e9896;
+      --font-display: 'Cinzel', 'Palatino Linotype', 'Book Antiqua', Georgia, serif;
+      --font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     }
 
-    * {
+    *, *::before, *::after {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
 
-    body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background-color: #1c120c;
-      color: var(--ink-dark);
+    html, body {
       margin: 0;
       padding: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: var(--font-sans);
+      color: var(--ink-dark);
+      background-color: #1c120c;
       overflow-x: hidden;
-      user-select: none;
     }
 
-    .font-cinzel {
-      font-family: 'Cinzel', Georgia, serif;
-    }
-
-    .font-mono-code {
-      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
-    }
-
-    .tabletop-bg {
+    body {
       background:
-        radial-gradient(circle at 50% 30%, rgba(120, 65, 30, 0.35), rgba(20, 12, 8, 0.96)),
+        radial-gradient(circle at 50% 25%, rgba(120, 65, 30, 0.36), rgba(18, 10, 6, 0.97)),
         repeating-linear-gradient(90deg, rgba(255,255,255,0.015) 0px, rgba(255,255,255,0.015) 2px, transparent 2px, transparent 14px),
         #22140d;
     }
 
+    body.in-game {
+      overflow: hidden;
+      height: 100vh;
+      height: 100dvh;
+    }
+
+    .hidden { display: none !important; }
+
+    .font-display { font-family: var(--font-display); }
+    .font-mono { font-family: var(--font-mono); }
+
+    /* =====================================================================
+       PANNELLI PERGAMENA & PULSANTI PLANCIA
+       ===================================================================== */
     .parchment-panel {
       background: linear-gradient(145deg, #f6eed9 0%, #e7d7b1 55%, #d8c292 100%);
       border: 2px solid #7c5832;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), inset 0 0 24px rgba(139, 98, 52, 0.22);
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55), inset 0 0 24px rgba(139, 98, 52, 0.2);
     }
 
     .parchment-card {
       background: linear-gradient(180deg, #faf4e4 0%, #ede0c0 100%);
       border: 1.5px solid #9c7649;
-      box-shadow: 0 3px 10px rgba(44, 30, 18, 0.16);
+      box-shadow: 0 3px 10px rgba(44, 30, 18, 0.15);
+      border-radius: 14px;
+    }
+
+    button, select, input {
+      font-family: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      user-select: none;
     }
 
     .btn-board {
       background: linear-gradient(180deg, #a82424 0%, #781515 100%);
       color: #fdf6e3;
       border: 1.5px solid #e2b857;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.25);
-      transition: all 0.15s ease;
+      border-radius: 11px;
+      padding: 8px 15px;
+      font-weight: 700;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.22);
+      transition: transform 0.12s ease, background 0.15s ease;
     }
     .btn-board:hover:not(:disabled) {
       transform: translateY(-1px);
       background: linear-gradient(180deg, #be2929 0%, #891818 100%);
     }
-    .btn-board:active:not(:disabled) {
-      transform: translateY(1px);
-    }
-    .btn-board:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-      filter: grayscale(0.4);
-    }
+    .btn-board:active:not(:disabled) { transform: translateY(1px); }
+    .btn-board:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(0.4); }
 
     .btn-gold {
       background: linear-gradient(180deg, #dfb547 0%, #b5881e 100%);
       color: #241608;
       border: 1.5px solid #5c3e12;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.45);
-      transition: all 0.15s ease;
+      border-radius: 11px;
+      padding: 8px 14px;
+      font-weight: 700;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.45);
+      transition: transform 0.12s ease, background 0.15s ease;
     }
     .btn-gold:hover:not(:disabled) {
       transform: translateY(-1px);
       background: linear-gradient(180deg, #ecc355 0%, #c69624 100%);
     }
-    .btn-gold:disabled {
+    .btn-gold:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-dark {
+      background: #2c1e12;
+      color: #f3ead3;
+      border: 1px solid #8c663b;
+      border-radius: 10px;
+      padding: 7px 12px;
+      font-weight: 700;
+      transition: background 0.15s ease;
+    }
+    .btn-dark:hover:not(:disabled) { background: #412d1c; }
+
+    /* =====================================================================
+       SCHERMATE HOME & LOBBY (SCORREVOLI SU PC E MOBILE)
+       ===================================================================== */
+    .scroll-screen {
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+
+    .home-container {
+      width: 100%;
+      max-width: 960px;
+      border-radius: 24px;
+      padding: 26px 28px;
+      position: relative;
+    }
+
+    .home-header {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .home-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: var(--crimson-dark);
+      color: #f7e7b4;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid #d4af37;
+      margin-bottom: 10px;
+    }
+
+    .home-title {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      margin: 0;
+      letter-spacing: 0.05em;
+      color: var(--crimson-dark);
+      line-height: 1.1;
+    }
+    .home-title span { color: var(--ink-dark); }
+
+    .home-subtitle {
+      margin: 8px auto 0;
+      max-width: 680px;
+      font-size: 14px;
+      color: var(--ink-muted);
+      line-height: 1.45;
+    }
+
+    .name-bar {
+      max-width: 440px;
+      margin: 0 auto 22px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .name-bar label {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--ink-muted);
+      white-space: nowrap;
+    }
+    .input-board {
+      width: 100%;
+      padding: 8px 11px;
+      border-radius: 9px;
+      background: #fffdf7;
+      border: 1.5px solid #9c7649;
+      color: var(--ink-dark);
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .input-board:focus {
+      outline: none;
+      border-color: var(--crimson-box);
+      box-shadow: 0 0 0 2px rgba(139, 30, 30, 0.2);
+    }
+
+    .home-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .action-tile {
+      padding: 18px;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    button.action-tile:hover {
+      transform: translateY(-2px);
+      border-color: var(--crimson-box);
+      box-shadow: 0 8px 20px rgba(44, 30, 18, 0.22);
+    }
+
+    .tile-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 12px;
+    }
+
+    .tile-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 18px;
+      margin: 0 0 6px;
+    }
+
+    .tile-desc {
+      font-size: 13px;
+      color: var(--ink-muted);
+      margin: 0 0 12px;
+      line-height: 1.4;
+    }
+
+    .tile-cta {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .quick-bar {
+      border-top: 1px solid rgba(156, 118, 73, 0.5);
+      padding-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .quick-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .btn-coop-quick {
+      background: #18181b;
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.65);
+      border-radius: 10px;
+      padding: 7px 12px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .btn-coop-quick:hover { background: #27272a; }
+
+    /* LOBBY */
+    .lobby-container {
+      width: 100%;
+      max-width: 1040px;
+      border-radius: 24px;
+      padding: 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .lobby-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border-bottom: 2px solid #8c663b;
+      padding-bottom: 12px;
+    }
+
+    .lobby-top-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 14px;
+    }
+
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .mode-card {
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid rgba(156, 118, 73, 0.5);
+      background: rgba(255, 255, 255, 0.55);
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+    .mode-card.active-pvp {
+      border-color: var(--crimson-dark);
+      background: #fff5f5;
+      box-shadow: 0 3px 10px rgba(120, 21, 21, 0.15);
+    }
+    .mode-card.active-coop {
+      border-color: #18181b;
+      background: #f4f4f5;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.18);
+    }
+    .mode-card:disabled {
       opacity: 0.45;
       cursor: not-allowed;
     }
 
-    /* Map Viewport */
-    #map-container {
+    .pattern-box {
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid #9c7649;
+      border-radius: 12px;
+      padding: 10px 12px;
+      margin-top: 8px;
+    }
+
+    .split-bar {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+      border: 1px solid rgba(140, 102, 59, 0.6);
+      background: #e2cfa2;
+      margin-top: 5px;
+    }
+
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      max-height: 36vh;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .player-row {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.8);
+      border: 1.5px solid #9c7649;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    /* =====================================================================
+       SCHERMATA DI GIOCO — ARCHITETTURA FLEXBOX BLOCCATA AL VIEWPORT
+       ===================================================================== */
+    #game-screen.active {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      padding-top: env(safe-area-inset-top);
+      padding-bottom: env(safe-area-inset-bottom);
+      z-index: 10;
+    }
+
+    /* 1. BARRA SUPERIORE HUD */
+    #top-hud {
+      flex-shrink: 0;
+      z-index: 25;
+      background: linear-gradient(180deg, #2a190f 0%, #1d110a 100%);
+      color: #f3ead3;
+      border-bottom: 2px solid var(--gold-accent);
+      padding: 6px 12px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+    }
+
+    .hud-player-info {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-width: 0;
+    }
+
+    .hud-color-badge {
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      border: 2px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .hud-name-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hud-pill {
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .phase-stepper {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      background: #140b06;
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid #5c432c;
+      overflow-x: auto;
+      max-width: 100%;
+    }
+
+    .phase-pill {
+      padding: 4px 9px;
+      border-radius: 7px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #a89074;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+    .phase-pill.current {
+      background: var(--gold-accent);
+      color: #241608;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .hud-utils {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-hud {
+      background: #3a2316;
+      color: #f3ead3;
+      border: 1px solid #8c663b;
+      border-radius: 8px;
+      padding: 5px 9px;
+      font-size: 11px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      min-height: 30px;
+    }
+    .btn-hud:hover { background: #4e301f; }
+    .btn-hud-exit {
+      background: var(--crimson-dark);
+      border-color: #e2b857;
+    }
+    .btn-hud-exit:hover { background: #991b1b; }
+
+    /* 2. AREA CENTRALE MAPPA (FONDAMENTALE min-height: 0!) */
+    #map-viewport {
+      flex: 1 1 auto;
+      min-height: 0;
+      position: relative;
+      overflow: hidden;
       background: radial-gradient(circle at 50% 45%, #7ba4a2 0%, #6e9896 60%, #5b8280 100%);
       cursor: grab;
       touch-action: none;
     }
-    #map-container:active {
-      cursor: grabbing;
+    #map-viewport:active { cursor: grabbing; }
+
+    #world-map {
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
     .territory-poly {
@@ -155,7 +580,7 @@
     }
 
     .ocean-label {
-      font-family: 'Cinzel', Georgia, serif;
+      font-family: var(--font-display);
       font-weight: 700;
       font-size: 16px;
       letter-spacing: 3.5px;
@@ -166,7 +591,7 @@
     }
 
     .territory-label {
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: var(--font-sans);
       font-weight: 700;
       font-size: 8.2px;
       fill: #1b1209;
@@ -178,10 +603,149 @@
       stroke-linejoin: round;
     }
 
-    /* 3D CSS Dice Cubes */
+    /* Controlli flottanti mappa */
+    .zoom-controls {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 15;
+    }
+    .zoom-btn {
+      min-width: 38px;
+      min-height: 38px;
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 15px;
+      color: var(--ink-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 8px;
+    }
+
+    .intel-card {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 265px;
+      border-radius: 14px;
+      padding: 11px 13px;
+      z-index: 15;
+      pointer-events: none;
+      font-size: 12px;
+    }
+
+    .log-drawer {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 310px;
+      max-width: calc(100vw - 20px);
+      max-height: 55vh;
+      border-radius: 14px;
+      padding: 12px;
+      z-index: 22;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ai-banner {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      padding: 8px 16px;
+      border-radius: 14px;
+      background: #18181b;
+      color: #fca5a5;
+      border: 2px solid #ef4444;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    /* 3. BARRA INFERIORE AZIONI & COMANDI (SEMPRE VISIBILE!) */
+    #bottom-hud {
+      flex-shrink: 0;
+      z-index: 30;
+      max-height: 36dvh;
+      overflow-y: auto;
+      background: linear-gradient(145deg, #f6eed9 0%, #e7d7b1 55%, #d8c292 100%);
+      border-top: 2.5px solid #7c5832;
+      box-shadow: 0 -6px 22px rgba(0, 0, 0, 0.48), inset 0 0 18px rgba(139, 98, 52, 0.18);
+      padding: 8px 14px;
+    }
+
+    .dock-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .dock-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .phase-badge-pill {
+      padding: 6px 13px;
+      border-radius: 999px;
+      background: var(--crimson-dark);
+      color: #f7e7b4;
+      border: 1px solid #d4af37;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .step-selector {
+      display: inline-flex;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1.5px solid #8c663b;
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    .step-btn {
+      border: none;
+      border-right: 1px solid rgba(140, 102, 59, 0.35);
+      background: transparent;
+      color: var(--ink-dark);
+      padding: 6px 11px;
+      font-size: 12px;
+      font-weight: 800;
+      min-height: 34px;
+    }
+    .step-btn:last-child { border-right: none; }
+    .step-btn.active {
+      background: #2c1e12;
+      color: #ffffff;
+    }
+
+    /* =====================================================================
+       DADI 3D CSS
+       ===================================================================== */
     .dice-scene {
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       perspective: 220px;
       display: inline-block;
     }
@@ -190,10 +754,10 @@
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.65s cubic-bezier(0.22, 1.15, 0.36, 1);
+      transition: transform 0.6s cubic-bezier(0.22, 1.15, 0.36, 1);
     }
     .dice-cube.rolling {
-      animation: diceSpin 0.45s linear infinite;
+      animation: diceSpin 0.42s linear infinite;
     }
     @keyframes diceSpin {
       0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
@@ -202,14 +766,14 @@
     }
     .dice-face {
       position: absolute;
-      width: 42px;
-      height: 42px;
-      border-radius: 8px;
+      width: 38px;
+      height: 38px;
+      border-radius: 7px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
-      padding: 5px;
-      box-shadow: inset 0 0 6px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.4);
+      padding: 4px;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.35), 0 1px 3px rgba(0,0,0,0.4);
       backface-visibility: hidden;
     }
     .dice-red .dice-face {
@@ -221,143 +785,188 @@
       border: 1.5px solid #93c5fd;
     }
     .pip {
-      width: 6.5px;
-      height: 6.5px;
+      width: 6px;
+      height: 6px;
       background: #ffffff;
       border-radius: 50%;
       align-self: center;
       justify-self: center;
       box-shadow: 0 1px 1px rgba(0,0,0,0.5);
     }
-    .face-1 { transform: rotateY(0deg) translateZ(21px); }
-    .face-6 { transform: rotateY(180deg) translateZ(21px); }
-    .face-2 { transform: rotateY(90deg) translateZ(21px); }
-    .face-5 { transform: rotateY(-90deg) translateZ(21px); }
-    .face-3 { transform: rotateX(90deg) translateZ(21px); }
-    .face-4 { transform: rotateX(-90deg) translateZ(21px); }
+    .face-1 { transform: rotateY(0deg) translateZ(19px); }
+    .face-6 { transform: rotateY(180deg) translateZ(19px); }
+    .face-2 { transform: rotateY(90deg) translateZ(19px); }
+    .face-5 { transform: rotateY(-90deg) translateZ(19px); }
+    .face-3 { transform: rotateX(90deg) translateZ(19px); }
+    .face-4 { transform: rotateX(-90deg) translateZ(19px); }
 
-    ::-webkit-scrollbar { width: 7px; height: 7px; }
-    ::-webkit-scrollbar-track { background: rgba(60, 40, 20, 0.12); border-radius: 4px; }
-    ::-webkit-scrollbar-thumb { background: #8c663b; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #6b4c29; }
+    /* =====================================================================
+       MODALI & TOAST
+       ===================================================================== */
+    #modal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 60;
+      background: rgba(0, 0, 0, 0.78);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    #modal-box {
+      width: 100%;
+      max-width: 820px;
+      max-height: 88dvh;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      border-bottom: 2px solid #8c663b;
+      background: #e2cfa2;
+    }
+
+    .modal-body {
+      padding: 16px 20px;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    #toast-container {
+      position: fixed;
+      top: 56px;
+      right: 12px;
+      z-index: 70;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      pointer-events: none;
+      max-width: 320px;
+    }
+
+    .toast-item {
+      padding: 9px 14px;
+      border-radius: 11px;
+      border: 1.5px solid #c59b27;
+      background: #2c1e12;
+      color: #f3ead3;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+      transition: opacity 0.25s ease;
+    }
+
+    /* =====================================================================
+       ADATTAMENTO MOBILE & TABLET (<= 768px)
+       ===================================================================== */
+    @media (max-width: 768px) {
+      .scroll-screen { padding: 10px; justify-content: flex-start; }
+      .home-container, .lobby-container { padding: 16px; border-radius: 18px; }
+      .home-grid, .lobby-top-grid, .mode-grid, .players-grid {
+        grid-template-columns: 1fr;
+      }
+      .name-bar { flex-direction: column; align-items: stretch; }
+      #top-hud { padding: 5px 8px; gap: 5px; }
+      .hud-label-hide { display: none; }
+      .phase-pill { padding: 4px 7px; font-size: 10px; }
+      #bottom-hud { padding: 7px 10px; }
+      #bottom-hud button, .step-btn, .zoom-btn {
+        min-height: 38px;
+      }
+      .dock-inner { justify-content: center; text-align: center; }
+      .dock-group { justify-content: center; }
+      .intel-card { width: 210px; font-size: 11px; padding: 8px 10px; }
+    }
   </style>
 </head>
-<body class="tabletop-bg min-h-screen flex flex-col">
+<body>
 
   <!-- TOAST LAYER -->
-  <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2 pointer-events-none max-w-sm"></div>
+  <div id="toast-container"></div>
 
   <!-- MODAL LAYER -->
-  <div id="modal-overlay" class="fixed inset-0 z-40 bg-black/75 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-6">
-    <div id="modal-box" class="parchment-panel rounded-2xl w-full max-w-4xl max-h-[90vh] flex flex-col overflow-hidden text-[#2c1e12]">
-      <div class="flex items-center justify-between px-5 py-3.5 border-b-2 border-[#8c663b] bg-[#e2cfa2]">
-        <h3 id="modal-title" class="font-cinzel font-bold text-lg sm:text-xl text-[#5c1616]">Titolo</h3>
-        <button id="modal-close-btn" class="p-2 rounded-lg hover:bg-black/10 text-[#2c1e12] font-bold text-lg leading-none" aria-label="Chiudi">✕</button>
+  <div id="modal-overlay" class="hidden">
+    <div id="modal-box" class="parchment-panel">
+      <div class="modal-header">
+        <h3 id="modal-title" class="font-display" style="margin:0; font-size:18px; color:#5c1616;">Titolo</h3>
+        <button id="modal-close-btn" class="btn-dark" style="padding:4px 10px;">✕</button>
       </div>
-      <div id="modal-content" class="p-4 sm:p-6 overflow-y-auto flex-1 text-sm sm:text-base leading-relaxed"></div>
+      <div id="modal-content" class="modal-body"></div>
     </div>
   </div>
 
   <!-- ===================================================================== -->
   <!-- SCHERMATA 1: HOME                                                     -->
   <!-- ===================================================================== -->
-  <section id="screen-home" class="flex-1 flex flex-col items-center justify-center p-4 sm:p-8">
-    <div class="max-w-4xl w-full parchment-panel rounded-3xl p-6 sm:p-10 relative overflow-hidden">
-      <div class="absolute top-3 left-3 w-3 h-3 rounded-full bg-[#8c663b]/60"></div>
-      <div class="absolute top-3 right-3 w-3 h-3 rounded-full bg-[#8c663b]/60"></div>
-      <div class="absolute bottom-3 left-3 w-3 h-3 rounded-full bg-[#8c663b]/60"></div>
-      <div class="absolute bottom-3 right-3 w-3 h-3 rounded-full bg-[#8c663b]/60"></div>
-
-      <div class="text-center mb-8">
-        <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#781515] text-[#f7e7b4] text-xs font-semibold tracking-widest uppercase mb-3 border border-[#d4af37]">
-          <span>★</span> Edizione Strategica Mondiale <span>★</span>
-        </div>
-        <h1 class="font-cinzel font-black text-4xl sm:text-6xl tracking-wider text-[#781515] drop-shadow-sm">
-          RISIKO! <span class="text-[#2c1e12]">ALLEANZE</span>
-        </h1>
-        <p class="mt-2 text-sm sm:text-base text-[#5c432c] max-w-2xl mx-auto font-medium">
+  <section id="screen-home" class="scroll-screen">
+    <div class="home-container parchment-panel">
+      <div class="home-header">
+        <div class="home-badge">★ Edizione Strategica Mondiale ★</div>
+        <h1 class="home-title">RISIKO! <span>ALLEANZE</span></h1>
+        <p class="home-subtitle">
           Planisfero realistico a <strong>80 territori</strong> su <strong>5 continenti classici</strong>. Stringi alleanze permanenti,
           presta e ritira carrarmatini agli alleati, dona o scambia territori e affronta l'<strong>Armata Nera</strong>.
         </p>
       </div>
 
-      <!-- Nome Comandante -->
-      <div class="max-w-md mx-auto mb-7 parchment-card rounded-xl p-3.5 flex flex-col sm:flex-row items-center gap-3">
-        <label for="home-player-name" class="text-xs font-bold uppercase tracking-wider text-[#5c432c] whitespace-nowrap">
-          Nome Comandante:
-        </label>
-        <input id="home-player-name" type="text" maxlength="16" value="Comandante 1"
-          class="w-full px-3 py-2 rounded-lg bg-[#fffdf7] border border-[#9c7649] text-[#2c1e12] font-semibold focus:outline-none focus:ring-2 focus:ring-[#8b1e1e]" />
+      <div class="name-bar parchment-card">
+        <label for="home-player-name">Nome Comandante:</label>
+        <input id="home-player-name" class="input-board" type="text" maxlength="16" value="Comandante 1" />
       </div>
 
-      <!-- 3 Pulsanti Principali -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 mb-7">
-        <button id="btn-create-room" class="parchment-card rounded-2xl p-5 text-left hover:border-[#8b1e1e] hover:shadow-lg transition group flex flex-col justify-between">
+      <div class="home-grid">
+        <button id="btn-create-room" class="action-tile parchment-card">
           <div>
-            <div class="w-12 h-12 rounded-xl bg-[#8b1e1e] text-[#f7e7b4] flex items-center justify-center text-2xl mb-3 group-hover:scale-105 transition">
-              ⚔️
-            </div>
-            <h2 class="font-cinzel font-bold text-xl text-[#781515] mb-1">Crea Partita</h2>
-            <p class="text-xs sm:text-sm text-[#5c432c]">
+            <div class="tile-icon" style="background:#8b1e1e; color:#f7e7b4;">⚔️</div>
+            <h2 class="tile-title" style="color:#781515;">Crea Partita</h2>
+            <p class="tile-desc">
               Apri una stanza da <strong>2 a 10 giocatori</strong>, imposta le squadre permanenti o sfida l'Armata Nera (1–4 umani).
             </p>
           </div>
-          <span class="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#8b1e1e] uppercase tracking-wider">
-            Apri Lobby Host →
-          </span>
+          <span class="tile-cta" style="color:#8b1e1e;">Apri Lobby Host →</span>
         </button>
 
-        <div class="parchment-card rounded-2xl p-5 flex flex-col justify-between">
+        <div class="action-tile parchment-card">
           <div>
-            <div class="w-12 h-12 rounded-xl bg-[#1e40af] text-white flex items-center justify-center text-2xl mb-3">
-              🛡️
-            </div>
-            <h2 class="font-cinzel font-bold text-xl text-[#1e3a8a] mb-1">Unisciti con Codice</h2>
-            <p class="text-xs sm:text-sm text-[#5c432c] mb-3">
-              Inserisci il codice stanza a 5 caratteri condiviso dall'Host per entrare nella lobby.
+            <div class="tile-icon" style="background:#1e40af; color:#ffffff;">🛡️</div>
+            <h2 class="tile-title" style="color:#1e3a8a;">Unisciti con Codice</h2>
+            <p class="tile-desc">
+              Inserisci il codice stanza a 5 caratteri condiviso dall'Host per entrare nella lobby sincronizzata.
             </p>
-            <div class="flex gap-2">
-              <input id="join-room-code" type="text" maxlength="5" placeholder="ES. A7K9P"
-                class="w-full px-3 py-2 rounded-lg bg-[#fffdf7] border border-[#9c7649] font-mono-code uppercase font-bold text-center tracking-widest text-[#2c1e12] focus:outline-none focus:ring-2 focus:ring-[#1e40af]" />
-              <button id="btn-join-room" class="btn-gold px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap">
-                Entra
-              </button>
+            <div style="display:flex; gap:8px;">
+              <input id="join-room-code" class="input-board font-mono" type="text" maxlength="5" placeholder="ES. A7K9P" style="text-transform:uppercase; text-align:center; letter-spacing:0.15em;" />
+              <button id="btn-join-room" class="btn-gold" style="white-space:nowrap;">Entra</button>
             </div>
           </div>
-          <span class="mt-3 text-[11px] font-medium text-[#5c432c]">
-            Stanza Locale / Multi-Scheda Browser Attiva
-          </span>
+          <span class="tile-cta" style="color:#5c432c; font-weight:600; text-transform:none;">Sincronizzazione Multi-Scheda Browser Attiva</span>
         </div>
 
-        <button id="btn-open-rules" class="parchment-card rounded-2xl p-5 text-left hover:border-[#b5881e] hover:shadow-lg transition group flex flex-col justify-between">
+        <button id="btn-open-rules" class="action-tile parchment-card">
           <div>
-            <div class="w-12 h-12 rounded-xl bg-[#b5881e] text-[#241608] flex items-center justify-center text-2xl mb-3 group-hover:scale-105 transition">
-              📜
-            </div>
-            <h2 class="font-cinzel font-bold text-xl text-[#5c3e12] mb-1">Regolamento</h2>
-            <p class="text-xs sm:text-sm text-[#5c432c]">
-              Leggi i <strong>due manuali completi</strong>: <em>PvP a Squadre (2–10)</em> e <em>Co-op vs Armata Nera (1–4)</em>.
+            <div class="tile-icon" style="background:#b5881e; color:#241608;">📜</div>
+            <h2 class="tile-title" style="color:#5c3e12;">Regolamento</h2>
+            <p class="tile-desc">
+              Consulta i <strong>due manuali completi</strong>: <em>PvP a Squadre (2–10)</em> e <em>Co-op vs Armata Nera (1–4)</em>.
             </p>
           </div>
-          <span class="mt-4 inline-flex items-center gap-1 text-xs font-bold text-[#7c5318] uppercase tracking-wider">
-            Apri i Due Manuali →
-          </span>
+          <span class="tile-cta" style="color:#7c5318;">Apri i Due Manuali →</span>
         </button>
       </div>
 
-      <!-- Avvio Rapido -->
-      <div class="border-t border-[#9c7649]/50 pt-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <span class="text-xs font-bold uppercase tracking-wider text-[#5c432c]">Avvio Rapido:</span>
-        <div class="flex flex-wrap justify-center gap-2">
-          <button id="btn-quick-pvp" class="px-3.5 py-2 rounded-xl bg-[#2c1e12] text-[#f3ead3] hover:bg-[#3f2c1b] text-xs font-semibold transition">
-            ⚡ 4 Giocatori (2v2 · 40 vs 40)
-          </button>
-          <button id="btn-quick-coop-1" class="px-3.5 py-2 rounded-xl bg-[#18181b] text-[#fca5a5] border border-[#ef4444]/60 hover:bg-[#27272a] text-xs font-semibold transition">
-            🤖 1 Umano vs Armata Nera (40 vs 40)
-          </button>
-          <button id="btn-quick-coop" class="px-3.5 py-2 rounded-xl bg-[#18181b] text-[#fca5a5] border border-[#ef4444]/60 hover:bg-[#27272a] text-xs font-semibold transition">
-            🤖 Co-op: 2 Umani vs Armata Nera
-          </button>
+      <div class="quick-bar">
+        <span style="font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:0.06em; color:#5c432c;">Avvio Rapido:</span>
+        <div class="quick-buttons">
+          <button id="btn-quick-pvp" class="btn-dark" style="font-size:12px;">⚡ 4 Giocatori (2v2 · 40 vs 40)</button>
+          <button id="btn-quick-coop-1" class="btn-coop-quick">🤖 1 Umano vs Armata Nera (40 vs 40)</button>
+          <button id="btn-quick-coop" class="btn-coop-quick">🤖 Co-op: 2 Umani vs Armata Nera</button>
         </div>
       </div>
     </div>
@@ -366,130 +975,114 @@
   <!-- ===================================================================== -->
   <!-- SCHERMATA 2: LOBBY PRE-PARTITA                                        -->
   <!-- ===================================================================== -->
-  <section id="screen-lobby" class="hidden flex-1 flex-col items-center justify-center p-3 sm:p-6">
-    <div class="max-w-5xl w-full parchment-panel rounded-3xl p-4 sm:p-7 flex flex-col gap-5">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b-2 border-[#8c663b] pb-4">
+  <section id="screen-lobby" class="scroll-screen hidden">
+    <div class="lobby-container parchment-panel">
+      <div class="lobby-header">
         <div>
-          <div class="flex items-center gap-2.5">
-            <h2 class="font-cinzel font-black text-2xl sm:text-3xl text-[#781515]">Sala Operativa</h2>
-            <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#2c1e12] text-[#f3ead3]">Lobby Host</span>
+          <div style="display:flex; align-items:center; gap:10px;">
+            <h2 class="font-display" style="margin:0; font-size:24px; color:#781515;">Sala Operativa</h2>
+            <span class="hud-pill" style="background:#2c1e12; color:#f3ead3;">Lobby Host</span>
           </div>
-          <p class="text-xs sm:text-sm text-[#5c432c] mt-0.5">
-            Scegli colori, assegna le squadre permanenti e conferma lo stato <strong>Pronto</strong> per iniziare.
+          <p style="margin:4px 0 0; font-size:12px; color:#5c432c;">
+            Scegli colori, pattern di schieramento, assegna le squadre permanenti e conferma <strong>Pronto</strong>.
           </p>
         </div>
 
-        <div class="flex items-center gap-2 self-start sm:self-auto">
-          <div class="parchment-card px-3.5 py-2 rounded-xl flex items-center gap-2">
-            <span class="text-xs font-bold text-[#5c432c] uppercase">Codice Stanza:</span>
-            <span id="lobby-room-code" class="font-mono-code font-black text-lg text-[#781515] tracking-widest">-----</span>
-            <button id="btn-copy-code" class="px-2 py-1 rounded bg-[#2c1e12] text-[#f3ead3] text-xs font-semibold hover:bg-[#46311e]">
-              Copia
-            </button>
+        <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <div class="parchment-card" style="padding:6px 12px; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:11px; font-weight:800; color:#5c432c;">CODICE STANZA:</span>
+            <span id="lobby-room-code" class="font-mono" style="font-size:17px; font-weight:900; color:#781515; letter-spacing:0.15em;">-----</span>
+            <button id="btn-copy-code" class="btn-dark" style="padding:4px 9px; font-size:11px;">Copia</button>
           </div>
-          <button id="btn-leave-lobby" class="px-3 py-2.5 rounded-xl border border-[#7c5832] hover:bg-black/10 text-xs font-bold">
-            Esci
-          </button>
+          <button id="btn-leave-lobby" class="btn-gold" style="padding:7px 12px; font-size:12px;">Esci</button>
         </div>
       </div>
 
-      <!-- Modalità & Comandi Host -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div class="parchment-card rounded-2xl p-4 lg:col-span-2 flex flex-col justify-between gap-3">
-          <div class="flex items-center justify-between">
-            <span class="text-xs font-bold uppercase tracking-wider text-[#5c432c]">Modalità di Gioco</span>
-            <span id="lobby-player-count" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#e2cfa2] border border-[#9c7649]">
-              2 / 10 Giocatori
-            </span>
+      <div class="lobby-top-grid">
+        <div class="parchment-card" style="padding:14px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#5c432c;">Modalità di Gioco</span>
+            <span id="lobby-player-count" class="hud-pill" style="background:#e2cfa2; border:1px solid #9c7649;">2 / 10 Giocatori</span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button id="mode-pvp-btn" class="p-3.5 rounded-xl border-2 text-left transition flex flex-col gap-1">
-              <div class="flex items-center justify-between">
-                <span class="font-cinzel font-bold text-base text-[#781515]">⚔️ PvP a Squadre</span>
-                <span class="text-[11px] font-bold px-2 py-0.5 rounded bg-[#781515] text-white">2–10 Giocatori</span>
+          <div class="mode-grid">
+            <button id="mode-pvp-btn" class="mode-card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong class="font-display" style="color:#781515; font-size:14px;">⚔️ PvP a Squadre</strong>
+                <span class="hud-pill" style="background:#781515; color:#fff;">2–10</span>
               </div>
-              <p class="text-xs text-[#5c432c]">
-                Alleanze permanenti tra giocatori. Bilanciamento automatico (+30% riserva, +25% rinforzi) se dispari.
-              </p>
+              <div style="font-size:11px; color:#5c432c;">
+                Alleanze permanenti. Bilanciamento automatico (+30% riserva, +25% rinforzi) se dispari.
+              </div>
             </button>
 
-            <button id="mode-coop-btn" class="p-3.5 rounded-xl border-2 text-left transition flex flex-col gap-1">
-              <div class="flex items-center justify-between">
-                <span class="font-cinzel font-bold text-base text-[#18181b]">🤖 Co-op vs Armata Nera</span>
-                <span id="coop-limit-badge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-[#18181b] text-[#fca5a5]">1–4 Umani</span>
+            <button id="mode-coop-btn" class="mode-card">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                <strong class="font-display" style="color:#18181b; font-size:14px;">🤖 Co-op vs Armata Nera</strong>
+                <span id="coop-limit-badge" class="hud-pill" style="background:#18181b; color:#fca5a5;">1–4 Umani</span>
               </div>
-              <p class="text-xs text-[#5c432c]">
-                Turni alternati (G1 → Neri → G2 → Neri...). IA Nera fortificata per densità di carri per territorio.
-              </p>
+              <div style="font-size:11px; color:#5c432c;">
+                Turni alternati (G1 → Neri → G2 → Neri...). IA Nera fortificata per densità di carri.
+              </div>
             </button>
           </div>
 
-          <div id="lobby-balance-banner" class="rounded-xl p-3 text-xs font-medium bg-[#fff8e6] border border-[#c59b27] text-[#4a3210]">
+          <div id="lobby-balance-banner" style="padding:8px 10px; border-radius:9px; font-size:12px; font-weight:600; background:#fff8e6; border:1px solid #c59b27; color:#4a3210;">
             Bilanciamento automatico attivo.
           </div>
 
-          <!-- Selettore Pattern Predefiniti di Schieramento -->
-          <div class="rounded-xl p-3 bg-white/75 border border-[#9c7649] flex flex-col gap-2">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <label for="lobby-pattern-select" class="text-xs font-bold uppercase tracking-wider text-[#5c432c]">
+          <div class="pattern-box">
+            <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:8px;">
+              <label for="lobby-pattern-select" style="font-size:11px; font-weight:800; text-transform:uppercase; color:#5c432c;">
                 🗺️ Pattern Predefinito di Schieramento:
               </label>
-              <select id="lobby-pattern-select" class="px-3 py-1.5 rounded-lg border border-[#8c663b] bg-[#faf4e4] text-xs font-bold text-[#2c1e12] focus:outline-none focus:ring-2 focus:ring-[#781515]">
+              <select id="lobby-pattern-select" style="padding:5px 9px; border-radius:8px; border:1px solid #8c663b; background:#faf4e4; font-size:12px; font-weight:700;">
                 <option value="CHECKERBOARD">1. Scacchiera Equilibrata (50/50)</option>
                 <option value="GEOPOLITICAL">2. Fronti Geopolitici Contrapposti</option>
                 <option value="STRONGHOLDS">3. Roccaforti Continentali</option>
                 <option value="FAIR_RANDOM">4. Casuale Equo</option>
               </select>
             </div>
-            <p id="lobby-pattern-desc" class="text-[11px] text-[#5c432c] leading-snug"></p>
-            <div class="space-y-1">
-              <div class="flex justify-between text-[11px] font-bold">
-                <span id="lobby-split-left" class="text-[#781515]">Fazione 1: 40 Territori (50%)</span>
-                <span id="lobby-split-right" class="text-[#1e3a8a]">Fazione 2: 40 Territori (50%)</span>
-              </div>
-              <div class="w-full h-2.5 rounded-full overflow-hidden flex border border-[#8c663b]/60 bg-[#e2cfa2]">
-                <div id="lobby-split-bar-left" class="bg-[#991b1b] transition-all duration-300" style="width: 50%;"></div>
-                <div id="lobby-split-bar-right" class="bg-[#1e40af] transition-all duration-300" style="width: 50%;"></div>
-              </div>
+            <p id="lobby-pattern-desc" style="margin:6px 0; font-size:11px; color:#5c432c;"></p>
+            <div style="display:flex; justify-content:space-between; font-size:11px; font-weight:800;">
+              <span id="lobby-split-left" style="color:#781515;">Fazione 1: 40 Territori (50%)</span>
+              <span id="lobby-split-right" style="color:#1e3a8a;">Fazione 2: 40 Territori (50%)</span>
+            </div>
+            <div class="split-bar">
+              <div id="lobby-split-bar-left" style="background:#991b1b; width:50%; transition:width 0.3s;"></div>
+              <div id="lobby-split-bar-right" style="background:#1e40af; width:50%; transition:width 0.3s;"></div>
             </div>
           </div>
         </div>
 
-        <div class="parchment-card rounded-2xl p-4 flex flex-col justify-between gap-2.5">
-          <span class="text-xs font-bold uppercase tracking-wider text-[#5c432c]">Comandi Host & Squadre</span>
-          <button id="btn-add-local-player" class="w-full py-2 px-3 rounded-xl bg-[#2c1e12] text-[#f3ead3] hover:bg-[#422e1c] text-xs font-bold transition">
-            + Aggiungi Giocatore
-          </button>
-          <button id="btn-randomize-teams" class="w-full py-2 px-3 rounded-xl btn-gold text-xs font-bold">
-            🎲 Squadre Casuali
-          </button>
-          <button id="btn-toggle-lock-teams" class="w-full py-2 px-3 rounded-xl border-2 border-[#781515] text-[#781515] hover:bg-[#781515]/10 text-xs font-bold transition">
+        <div class="parchment-card" style="padding:14px; display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
+          <span style="font-size:11px; font-weight:800; text-transform:uppercase; color:#5c432c;">Comandi Host & Squadre</span>
+          <button id="btn-add-local-player" class="btn-dark" style="width:100%; font-size:12px;">+ Aggiungi Giocatore</button>
+          <button id="btn-randomize-teams" class="btn-gold" style="width:100%; font-size:12px;">🎲 Squadre Casuali</button>
+          <button id="btn-toggle-lock-teams" style="width:100%; padding:8px; border-radius:10px; border:2px solid #781515; background:transparent; color:#781515; font-weight:800; font-size:12px;">
             🔓 Blocca Alleanze
           </button>
-          <button id="btn-lobby-rules" class="w-full py-1.5 px-3 rounded-xl border border-[#8c663b] text-[#5c432c] hover:bg-black/5 text-xs font-semibold">
+          <button id="btn-lobby-rules" style="width:100%; padding:7px; border-radius:10px; border:1px solid #8c663b; background:rgba(255,255,255,0.6); color:#5c432c; font-weight:700; font-size:12px;">
             📜 Apri Regolamento
           </button>
         </div>
       </div>
 
-      <!-- Elenco Giocatori -->
-      <div class="parchment-card rounded-2xl p-4">
-        <div class="flex items-center justify-between mb-3">
-          <h3 class="font-cinzel font-bold text-base text-[#2c1e12]">Comandanti in Lobby</h3>
-          <span id="alliances-locked-status" class="text-xs font-bold text-[#8b1e1e]">
+      <div class="parchment-card" style="padding:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; flex-wrap:wrap; gap:6px;">
+          <h3 class="font-display" style="margin:0; font-size:15px;">Comandanti in Lobby</h3>
+          <span id="alliances-locked-status" style="font-size:12px; font-weight:800; color:#8b1e1e;">
             ⚠️ Blocca le alleanze prima di iniziare
           </span>
         </div>
-        <div id="lobby-players-grid" class="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[38vh] overflow-y-auto pr-1"></div>
+        <div id="lobby-players-grid" class="players-grid"></div>
       </div>
 
-      <!-- Avvio Partita -->
-      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
-        <div id="lobby-start-hint" class="text-xs font-semibold text-[#5c432c]">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px;">
+        <span id="lobby-start-hint" style="font-size:12px; font-weight:600; color:#5c432c;">
           Tutti i giocatori devono premere "Pronto" e l'Host deve bloccare le alleanze.
-        </div>
-        <button id="btn-start-match" class="btn-board px-7 py-3 rounded-2xl font-cinzel font-bold text-base sm:text-lg tracking-wide w-full sm:w-auto">
+        </span>
+        <button id="btn-start-match" class="btn-board font-display" style="font-size:15px; padding:11px 24px;">
           ⚔️ INIZIA PARTITA
         </button>
       </div>
@@ -497,137 +1090,121 @@
   </section>
 
   <!-- ===================================================================== -->
-  <!-- SCHERMATA 3: PLANCIA DI GIOCO (80 TERRITORI + HUD FASI)               -->
+  <!-- SCHERMATA 3: PLANCIA DI GIOCO (VIEWPORT BLOCCATO PC + MOBILE)         -->
   <!-- ===================================================================== -->
-  <section id="screen-game" class="hidden flex-1 flex-col h-screen overflow-hidden">
-    <!-- Top HUD -->
-    <header class="bg-[#24150d] text-[#f3ead3] border-b-2 border-[#c59b27] px-3 py-2 flex flex-wrap items-center justify-between gap-2 z-20 shadow-lg">
-      <div class="flex items-center gap-2.5">
-        <div id="hud-active-color-dot" class="w-8 h-8 rounded-xl border-2 border-white shadow-inner flex items-center justify-center font-bold text-xs">
-          ⚔️
-        </div>
+  <section id="game-screen" class="hidden">
+    <!-- 1. BARRA SUPERIORE HUD -->
+    <header id="top-hud">
+      <div class="hud-player-info">
+        <div id="hud-active-color-dot" class="hud-color-badge">⚔️</div>
         <div>
-          <div class="flex flex-wrap items-center gap-1.5">
-            <span id="hud-active-name" class="font-cinzel font-bold text-sm sm:text-base text-[#f7e7b4]">Giocatore</span>
-            <span id="hud-active-team" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-[#781515] text-white">
-              Squadra Alpha
-            </span>
-            <span id="hud-next-turn-badge" class="px-2 py-0.5 rounded text-[10px] font-semibold bg-[#3a2316] border border-[#8c663b] text-[#e7d7b1]">
-              Prossimo: -
-            </span>
+          <div class="hud-name-line">
+            <span id="hud-active-name" class="font-display" style="font-weight:800; font-size:14px; color:#f7e7b4;">Giocatore</span>
+            <span id="hud-active-team" class="hud-pill" style="background:#781515; color:#fff;">Squadra Alpha</span>
+            <span id="hud-next-turn-badge" class="hud-pill" style="background:#3a2316; border:1px solid #8c663b; color:#e7d7b1;">Prossimo: -</span>
           </div>
-          <div id="hud-turn-counter" class="text-[11px] text-[#cbb482]">
+          <div id="hud-turn-counter" style="font-size:11px; color:#cbb482; margin-top:2px;">
             Turno 1 · Territori: 0/80 · Carri: 0
           </div>
         </div>
       </div>
 
-      <!-- Phase Stepper -->
-      <div id="hud-phase-stepper" class="flex items-center gap-1 bg-[#160c07] p-1 rounded-xl border border-[#5c432c]">
-        <div data-phase="SETUP_DEPLOY" class="phase-pill px-2.5 py-1 rounded-lg text-[11px] font-bold">Schieramento</div>
-        <div data-phase="REINFORCE" class="phase-pill px-2.5 py-1 rounded-lg text-[11px] font-bold">1. Rinforzo</div>
-        <div data-phase="DIPLOMACY" class="phase-pill px-2.5 py-1 rounded-lg text-[11px] font-bold">2. Diplomazia</div>
-        <div data-phase="ATTACK" class="phase-pill px-2.5 py-1 rounded-lg text-[11px] font-bold">3. Attacco</div>
-        <div data-phase="MANEUVER" class="phase-pill px-2.5 py-1 rounded-lg text-[11px] font-bold">4. Manovra</div>
+      <!-- Indicatore Fase Corrente -->
+      <div id="hud-phase-stepper" class="phase-stepper">
+        <div data-phase="SETUP_DEPLOY" class="phase-pill">Schieramento</div>
+        <div data-phase="REINFORCE" class="phase-pill">1. Rinforzo</div>
+        <div data-phase="DIPLOMACY" class="phase-pill">2. Diplomazia</div>
+        <div data-phase="ATTACK" class="phase-pill">3. Attacco</div>
+        <div data-phase="MANEUVER" class="phase-pill">4. Manovra</div>
       </div>
 
-      <!-- Utility Buttons -->
-      <div class="flex items-center gap-1.5">
-        <button id="btn-hud-cards" class="px-2.5 py-1.5 rounded-lg bg-[#3a2316] hover:bg-[#4e301f] border border-[#8c663b] text-xs font-bold flex items-center gap-1">
-          🃏 <span class="hidden sm:inline">Carte</span> (<span id="hud-cards-count">0</span>)
+      <!-- Pulsanti Rapidi HUD -->
+      <div class="hud-utils">
+        <button id="btn-hud-cards" class="btn-hud" title="Carte Territorio">
+          🃏 <span class="hud-label-hide">Carte</span> (<span id="hud-cards-count">0</span>)
         </button>
-        <button id="btn-hud-continents" class="px-2.5 py-1.5 rounded-lg bg-[#3a2316] hover:bg-[#4e301f] border border-[#8c663b] text-xs font-bold">
-          🌍 <span class="hidden sm:inline">Continenti</span>
+        <button id="btn-hud-continents" class="btn-hud" title="Bonus Continenti">
+          🌍 <span class="hud-label-hide">Continenti</span>
         </button>
-        <button id="btn-hud-log" class="px-2.5 py-1.5 rounded-lg bg-[#3a2316] hover:bg-[#4e301f] border border-[#8c663b] text-xs font-bold">
-          📋 <span class="hidden sm:inline">Diario</span>
+        <button id="btn-hud-log" class="btn-hud" title="Diario di Guerra">
+          📋 <span class="hud-label-hide">Diario</span>
         </button>
-        <button id="btn-hud-rules" class="px-2.5 py-1.5 rounded-lg bg-[#3a2316] hover:bg-[#4e301f] border border-[#8c663b] text-xs font-bold" title="Regolamento">
-          📜
-        </button>
-        <button id="btn-hud-audio" class="px-2.5 py-1.5 rounded-lg bg-[#3a2316] hover:bg-[#4e301f] border border-[#8c663b] text-xs font-bold" title="Audio On/Off">
-          🔊
-        </button>
-        <button id="btn-hud-exit" class="px-2.5 py-1.5 rounded-lg bg-[#781515] hover:bg-[#991b1b] text-xs font-bold" title="Torna alla Home">
-          ✕
-        </button>
+        <button id="btn-hud-rules" class="btn-hud" title="Regolamento Rapido">?</button>
+        <button id="btn-hud-audio" class="btn-hud" title="Audio On/Off">🔊</button>
+        <button id="btn-hud-exit" class="btn-hud btn-hud-exit" title="Torna alla Lobby / Home">Lobby</button>
       </div>
     </header>
 
-    <!-- Map Canvas -->
-    <main class="relative flex-1 overflow-hidden">
-      <div id="map-container" class="w-full h-full relative">
-        <svg id="world-svg" viewBox="0 0 1800 920" class="w-full h-full block">
-          <defs>
-            <filter id="land-shadow" x="-5%" y="-5%" width="110%" height="110%">
-              <feDropShadow dx="1.5" dy="2.5" stdDeviation="2.4" flood-color="#1c3633" flood-opacity="0.48" />
-            </filter>
-            <filter id="tank-shadow" x="-30%" y="-30%" width="160%" height="160%">
-              <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.55" />
-            </filter>
-          </defs>
-          <g id="map-viewport">
-            <g id="map-graticule"></g>
-            <g id="map-sea-routes"></g>
-            <g id="map-territories" filter="url(#land-shadow)"></g>
-            <g id="map-labels"></g>
-            <g id="map-units"></g>
-            <g id="map-ornaments" pointer-events="none"></g>
-          </g>
-        </svg>
+    <!-- 2. AREA CENTRALE MAPPA (flex: 1 1 auto; min-height: 0) -->
+    <main id="map-viewport">
+      <svg id="world-map" viewBox="0 0 1800 920" preserveAspectRatio="xMidYMid meet">
+        <defs>
+          <filter id="land-shadow" x="-5%" y="-5%" width="110%" height="110%">
+            <feDropShadow dx="1.5" dy="2.5" stdDeviation="2.4" flood-color="#1c3633" flood-opacity="0.48" />
+          </filter>
+          <filter id="tank-shadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.55" />
+          </filter>
+        </defs>
+        <g id="map-camera">
+          <g id="map-graticule"></g>
+          <g id="map-sea-routes"></g>
+          <g id="map-territories" filter="url(#land-shadow)"></g>
+          <g id="map-labels"></g>
+          <g id="map-units"></g>
+          <g id="map-ornaments" pointer-events="none"></g>
+        </g>
+      </svg>
+
+      <!-- Controlli Flottanti Zoom -->
+      <div class="zoom-controls">
+        <button id="btn-zoom-in" class="zoom-btn parchment-panel" title="Zoom Avanti">+</button>
+        <button id="btn-zoom-out" class="zoom-btn parchment-panel" title="Zoom Indietro">−</button>
+        <button id="btn-zoom-reset" class="zoom-btn parchment-panel" style="font-size:11px;" title="Reimposta Vista">⟲ Reset</button>
       </div>
 
-      <!-- Zoom Controls -->
-      <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
-        <button id="btn-zoom-in" class="w-9 h-9 rounded-xl parchment-panel font-bold text-lg flex items-center justify-center hover:brightness-105 shadow">+</button>
-        <button id="btn-zoom-out" class="w-9 h-9 rounded-xl parchment-panel font-bold text-lg flex items-center justify-center hover:brightness-105 shadow">−</button>
-        <button id="btn-zoom-reset" class="px-2 py-1.5 rounded-xl parchment-panel font-bold text-[10px] uppercase tracking-wider hover:brightness-105 shadow">Reset</button>
-      </div>
-
-      <!-- Hover Territory Tooltip -->
-      <div id="territory-intel-card" class="hidden absolute top-3 right-3 w-64 sm:w-72 parchment-panel rounded-2xl p-3.5 z-10 pointer-events-none text-xs">
-        <div class="flex items-center justify-between border-b border-[#8c663b]/50 pb-1.5 mb-2">
-          <span id="intel-name" class="font-cinzel font-bold text-sm text-[#781515]">Territorio</span>
-          <span id="intel-continent" class="px-2 py-0.5 rounded bg-[#e2cfa2] font-semibold text-[10px]">Continente</span>
+      <!-- Scheda Intel Territorio -->
+      <div id="territory-intel-card" class="intel-card parchment-panel hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(140,102,59,0.5); padding-bottom:5px; margin-bottom:6px;">
+          <span id="intel-name" class="font-display" style="font-weight:800; font-size:13px; color:#781515;">Territorio</span>
+          <span id="intel-continent" class="hud-pill" style="background:#e2cfa2;">Continente</span>
         </div>
-        <div id="intel-owner" class="font-semibold mb-1.5">Proprietario: -</div>
-        <div id="intel-garrison" class="space-y-1 bg-white/55 rounded-lg p-2 border border-[#9c7649]/40"></div>
-        <div id="intel-neighbors" class="mt-2 text-[10px] text-[#5c432c] leading-tight"></div>
+        <div id="intel-owner" style="font-weight:700; margin-bottom:6px;">Proprietario: -</div>
+        <div id="intel-garrison" style="background:rgba(255,255,255,0.65); border-radius:8px; padding:6px 8px; border:1px solid rgba(156,118,73,0.4);"></div>
+        <div id="intel-neighbors" style="margin-top:6px; font-size:10px; color:#5c432c; line-height:1.3;"></div>
       </div>
 
-      <!-- Diario Drawer -->
-      <div id="game-log-drawer" class="hidden absolute top-3 right-3 w-80 max-h-[60vh] parchment-panel rounded-2xl p-3.5 z-20 flex flex-col shadow-2xl">
-        <div class="flex items-center justify-between border-b border-[#8c663b] pb-2 mb-2">
-          <span class="font-cinzel font-bold text-sm text-[#781515]">Diario di Guerra & Diplomazia</span>
-          <button id="btn-close-log" class="text-xs font-bold px-2 py-0.5 rounded hover:bg-black/10">✕</button>
+      <!-- Diario di Guerra Drawer -->
+      <div id="game-log-drawer" class="log-drawer parchment-panel hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #8c663b; padding-bottom:6px; margin-bottom:8px;">
+          <span class="font-display" style="font-weight:800; font-size:13px; color:#781515;">Diario di Guerra & Diplomazia</span>
+          <button id="btn-close-log" class="btn-dark" style="padding:2px 8px; font-size:11px;">✕</button>
         </div>
-        <div id="game-log-list" class="overflow-y-auto space-y-1.5 text-xs pr-1 flex-1"></div>
+        <div id="game-log-list" style="overflow-y:auto; display:flex; flex-direction:column; gap:5px; font-size:11px; flex:1;"></div>
       </div>
 
-      <!-- AI Banner -->
-      <div id="ai-thinking-banner" class="hidden absolute top-14 left-1/2 -translate-x-1/2 z-20 px-5 py-2.5 rounded-2xl bg-[#18181b] text-[#fca5a5] border-2 border-[#ef4444] shadow-2xl flex items-center gap-3">
-        <span class="animate-spin text-lg">⚙️</span>
-        <span id="ai-thinking-text" class="font-cinzel font-bold text-xs sm:text-sm tracking-wide">
-          L'Armata Nera sta pianificando l'offensiva...
-        </span>
+      <!-- Banner IA Armata Nera -->
+      <div id="ai-thinking-banner" class="ai-banner hidden">
+        <span>⚙️</span>
+        <span id="ai-thinking-text">L'Armata Nera sta pianificando l'offensiva...</span>
       </div>
     </main>
 
-    <!-- Bottom Action Dock -->
-    <footer id="game-action-dock" class="parchment-panel border-t-2 border-[#7c5832] px-3 sm:px-5 py-2.5 z-20">
-      <div id="action-dock-content" class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-3"></div>
+    <!-- 3. BARRA INFERIORE AZIONI & COMANDI (SEMPRE VISIBILE!) -->
+    <footer id="bottom-hud">
+      <div id="action-dock-content" class="dock-inner"></div>
     </footer>
   </section>
 
   <!-- ===================================================================== -->
-  <!-- MOTORE APPLICATIVO COMPLETO (AUTO-CONTENUTO, ZERO DIPENDENZE FRAGILI) -->
+  <!-- MOTORE MODULARE ES6 AUTO-CONTENUTO                                    -->
   <!-- ===================================================================== -->
   <script>
-    (function () {
+    (() => {
       'use strict';
 
       /* =====================================================================
-         1. MAP DATA — 5 CONTINENTI CLASSICI & 80 TERRITORI CONTINUI (ZERO GAP)
+         MODULO 1: MAP DATA — 5 CONTINENTI CLASSICI & 80 TERRITORI CONTINUI
          ===================================================================== */
       const MapData = (() => {
         const PLAYER_COLORS = [
@@ -718,7 +1295,6 @@
           return [Math.round(cx / (6 * area)), Math.round(cy / (6 * area))];
         }
 
-        // Frontiera esatta condivisa Europa <-> Asia (zero gap!)
         const EUROPE_ASIA_BORDER = [
           [1035, 118], [1042, 175], [1038, 240], [1048, 305],
           [1032, 355], [1045, 400], [1002, 412], [958, 398]
@@ -932,7 +1508,6 @@
           };
         });
 
-        // Garanzia di simmetria bidirezionale al 100%
         Object.values(TERRITORIES).forEach(t => {
           t.neighbors.forEach(nid => {
             if (TERRITORIES[nid] && !TERRITORIES[nid].neighbors.includes(t.id)) {
@@ -965,29 +1540,29 @@
       })();
 
       /* =====================================================================
-         2. DOPPIO REGOLAMENTO (PVP A SQUADRE & CO-OP VS ARMATA NERA)
+         MODULO 2: DOPPIO REGOLAMENTO (PVP A SQUADRE & CO-OP VS ARMATA NERA)
          ===================================================================== */
       const RulesData = {
         MANUAL_PVP: `
-          <div class="space-y-4 text-[#2c1e12]">
-            <div class="p-3.5 rounded-xl bg-[#781515] text-[#f7e7b4]">
-              <h4 class="font-cinzel font-bold text-lg">Manuale 1 — Modalità PvP a Squadre (2–10 Giocatori)</h4>
-              <p class="text-xs opacity-90 mt-1">Planisfero realistico a <strong>80 territori</strong> su <strong>5 continenti classici</strong> con ripartizione bilanciata <strong>40 vs 40</strong>.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="padding:12px 14px; border-radius:12px; background:#781515; color:#f7e7b4;">
+              <h4 class="font-display" style="margin:0; font-size:16px;">Manuale 1 — Modalità PvP a Squadre (2–10 Giocatori)</h4>
+              <p style="margin:4px 0 0; font-size:12px;">Planisfero realistico a <strong>80 territori</strong> su <strong>5 continenti classici</strong> con ripartizione bilanciata <strong>40 vs 40</strong>.</p>
             </div>
-            <div class="parchment-card p-4 rounded-xl space-y-2">
-              <h5 class="font-cinzel font-bold text-base text-[#781515]">1. Pattern Predefiniti, Alleanze Permanenti & Bilanciamento Dispari</h5>
-              <ul class="list-disc pl-5 space-y-1 text-xs sm:text-sm">
-                <li><strong>Pattern Predefiniti di Schieramento:</strong> L'Host sceglie in Lobby tra <em>Scacchiera Equilibrata (50/50)</em>, <em>Fronti Geopolitici Contrapposti</em>, <em>Roccaforti Continentali</em> e <em>Casuale Equo</em>. Gli 80 territori vengono sempre divisi equamente (<strong>40 vs 40</strong>) senza mai assegnare continenti completi già al Turno 1.</li>
-                <li><strong>Squadre Fisse:</strong> L'Host assegna (manualmente o casualmente) le squadre in Lobby e le blocca prima di iniziare. Gli alleati <strong>non possono mai attaccarsi</strong> tra loro e vincono insieme.</li>
-                <li><strong>Piazzamento Iniziale Sequenziale:</strong> Il Giocatore 1 posiziona <em>tutti</em> i propri carri iniziali (usando <code>+1</code>, <code>+5</code>, <code>+10</code> o <code>MAX</code>), poi tocca al Giocatore 2 e così via.</li>
-                <li><strong>Bilanciamento Squadre Dispari:</strong> Se le squadre hanno un numero diverso di giocatori (es. 2v1, 3v2, 4v3), la squadra in inferiorità riceve automaticamente <strong>+30% di carri iniziali</strong> e <strong>+25% di rinforzi extra</strong> ad ogni turno.</li>
+            <div class="parchment-card" style="padding:12px 14px;">
+              <h5 class="font-display" style="margin:0 0 6px; color:#781515; font-size:14px;">1. Pattern Predefiniti, Alleanze Permanenti & Bilanciamento Dispari</h5>
+              <ul style="margin:0; padding-left:18px; font-size:13px;">
+                <li><strong>Pattern Predefiniti di Schieramento:</strong> L'Host sceglie in Lobby tra <em>Scacchiera Equilibrata (50/50)</em>, <em>Fronti Geopolitici Contrapposti</em>, <em>Roccaforti Continentali</em> e <em>Casuale Equo</em> (sempre <strong>40 vs 40</strong> territori).</li>
+                <li><strong>Squadre Fisse:</strong> L'Host assegna e blocca le squadre prima del via. Gli alleati <strong>non possono mai attaccarsi</strong> tra loro e vincono insieme.</li>
+                <li><strong>Schieramento Iniziale Sequenziale:</strong> Il Giocatore 1 posiziona tutti i propri carri (usando <code>+1</code>, <code>+5</code>, <code>+10</code>, <code>MAX</code>), poi passa al Giocatore 2 e così via.</li>
+                <li><strong>Bilanciamento Squadre Dispari:</strong> Se una squadra ha meno giocatori (es. 2v1, 3v2, 4v3), riceve automaticamente <strong>+30% carri iniziali</strong> e <strong>+25% rinforzi ad ogni turno</strong>.</li>
               </ul>
             </div>
-            <div class="parchment-card p-4 rounded-xl space-y-2">
-              <h5 class="font-cinzel font-bold text-base text-[#781515]">2. Le 4 Fasi del Turno & Bonus Continenti</h5>
-              <ol class="list-decimal pl-5 space-y-1.5 text-xs sm:text-sm">
+            <div class="parchment-card" style="padding:12px 14px;">
+              <h5 class="font-display" style="margin:0 0 6px; color:#781515; font-size:14px;">2. Le 4 Fasi del Turno & Bonus Continenti</h5>
+              <ol style="margin:0; padding-left:18px; font-size:13px;">
                 <li><strong>Fase 1 — Rinforzo:</strong> Ottieni <code>max(3, floor(Territori / 3))</code> + Bonus Continenti: <strong>Asia (+10)</strong>, <strong>America (+8)</strong>, <strong>Europa (+6)</strong>, <strong>Africa (+5)</strong>, <strong>Oceania (+3)</strong> + eventuale <em>Tris Carte</em> (6–12 carri).</li>
-                <li><strong>Fase 2 — Diplomazia & Prestiti:</strong> Puoi <strong>prestare</strong> tuoi carri mettendoli su un territorio di un alleato: da quel momento l'alleato li usa per attaccare e difendere. In qualsiasi tua Fase 2 puoi <strong>ritirare</strong> i tuoi carri prestati riportandoli su un tuo territorio.</li>
+                <li><strong>Fase 2 — Diplomazia & Prestiti:</strong> Trasferisci tuoi carri su un territorio alleato (l'alleato può usarli per attaccare e difendere) oppure ritira i tuoi carri prestati quando vuoi.</li>
                 <li><strong>Fase 3 — Attacco (3 Dadi Rossi vs 3 Dadi Blu):</strong> Regolamento italiano classico; parità al difensore. In difesa con guarnigione mista vengono eliminati <strong>prima i carri del proprietario</strong> e <strong>poi quelli in prestito</strong>.</li>
                 <li><strong>Fase 4 — Manovra & Scambio Territori:</strong> Spostamento strategico tra territori amici collegati, oppure <strong>Dona Territorio</strong> / <strong>Scambia Territorio</strong> con un alleato (tutti i carri presenti vengono convertiti istantaneamente nel colore del nuovo proprietario).</li>
               </ol>
@@ -995,29 +1570,25 @@
           </div>
         `,
         MANUAL_COOP: `
-          <div class="space-y-4 text-[#2c1e12]">
-            <div class="p-3.5 rounded-xl bg-[#18181b] text-[#fca5a5] border border-[#ef4444]">
-              <h4 class="font-cinzel font-bold text-lg">Manuale 2 — Co-op vs Armata Nera (1–4 Giocatori Umani)</h4>
-              <p class="text-xs opacity-90 mt-1">Alleanza umana contro l'IA Nera con pattern bilanciati 50/50 e turni strettamente alternati.</p>
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="padding:12px 14px; border-radius:12px; background:#18181b; color:#fca5a5; border:1px solid #ef4444;">
+              <h4 class="font-display" style="margin:0; font-size:16px;">Manuale 2 — Co-op vs Armata Nera (1–4 Giocatori Umani)</h4>
+              <p style="margin:4px 0 0; font-size:12px;">Alleanza umana contro l'IA Nera con pattern bilanciati 50/50 e turni strettamente alternati.</p>
             </div>
-            <div class="parchment-card p-4 rounded-xl space-y-2">
-              <h5 class="font-cinzel font-bold text-base text-[#18181b]">1. Pattern 50/50 & Quote Territori Esatte (1–4 Umani)</h5>
-              <p class="text-xs sm:text-sm">
-                Grazie ai <strong>Pattern Predefiniti di Schieramento</strong>, l'Armata Nera controlla metà della plancia fin dall'inizio, con densità di carri scalabile in base al numero di umani:
-              </p>
-              <ul class="list-disc pl-5 text-xs space-y-0.5">
-                <li><strong>1 Umano vs Armata Nera:</strong> <strong>40 territori</strong> Umano vs <strong>40 territori</strong> Armata Nera (<strong>50% vs 50%</strong>) · densità IA <strong>~3.4 carri/territorio</strong>.</li>
-                <li><strong>2 Umani vs Armata Nera:</strong> <strong>40 territori</strong> Umani (20 a testa) vs <strong>40 territori</strong> Armata Nera (<strong>50% vs 50%</strong>) · densità IA <strong>~4.0 carri/territorio</strong>.</li>
-                <li><strong>3 Umani vs Armata Nera:</strong> <strong>42 territori</strong> Umani (14 a testa) vs <strong>38 territori</strong> Armata Nera (<strong>~52% vs 48%</strong>) · densità IA <strong>~4.6 carri/territorio</strong>.</li>
-                <li><strong>4 Umani vs Armata Nera:</strong> <strong>44 territori</strong> Umani (11 a testa) vs <strong>36 territori</strong> Armata Nera (<strong>~55% vs 45%</strong>) · densità IA <strong>~5.2 carri/territorio</strong>.</li>
+            <div class="parchment-card" style="padding:12px 14px;">
+              <h5 class="font-display" style="margin:0 0 6px; color:#18181b; font-size:14px;">1. Quote Territori & Densità Scalabile (1–4 Umani)</h5>
+              <ul style="margin:0; padding-left:18px; font-size:13px;">
+                <li><strong>1 Umano vs Armata Nera:</strong> <strong>40 territori</strong> Umano vs <strong>40 territori</strong> Armata Nera (50% / 50%) · densità IA <strong>~3.4 carri/territorio</strong>.</li>
+                <li><strong>2 Umani vs Armata Nera:</strong> <strong>40 territori</strong> Umani (20 a testa) vs <strong>40 territori</strong> Armata Nera · densità IA <strong>~4.0 carri/territorio</strong>.</li>
+                <li><strong>3 Umani vs Armata Nera:</strong> <strong>42 territori</strong> Umani (14 a testa) vs <strong>38 territori</strong> Armata Nera · densità IA <strong>~4.6 carri/territorio</strong>.</li>
+                <li><strong>4 Umani vs Armata Nera:</strong> <strong>44 territori</strong> Umani (11 a testa) vs <strong>36 territori</strong> Armata Nera · densità IA <strong>~5.2 carri/territorio</strong>.</li>
               </ul>
             </div>
-            <div class="parchment-card p-4 rounded-xl space-y-2">
-              <h5 class="font-cinzel font-bold text-base text-[#18181b]">2. Turni Strettamente Alternati & Comportamento IA</h5>
-              <p class="text-xs sm:text-sm">
-                L'ordine di gioco segue sempre lo schema:
-                <strong>Giocatore 1 → Armata Nera → Giocatore 2 → Armata Nera → Giocatore 3 → Armata Nera → …</strong>
-                Il badge <em>"Prossimo Turno"</em> nella barra superiore indica chi agirà subito dopo. L'IA concentra i rinforzi sui confini pericolosi, attacca solo con rapporto di forza <strong>≥ 1.65×</strong> (o per chiudere un continente) e sposta le truppe dalle retrovie al fronte.
+            <div class="parchment-card" style="padding:12px 14px;">
+              <h5 class="font-display" style="margin:0 0 6px; color:#18181b; font-size:14px;">2. Turni Strettamente Alternati & Comportamento IA</h5>
+              <p style="margin:0; font-size:13px;">
+                Ordine di gioco: <strong>Giocatore 1 → Armata Nera → Giocatore 2 → Armata Nera → …</strong>
+                L'Armata Nera concentra i rinforzi sui confini pericolosi, attacca solo con rapporto di forza <strong>≥ 1.7×</strong> (o per completare un continente) e sposta le truppe dalle retrovie al fronte.
               </p>
             </div>
           </div>
@@ -1025,7 +1596,7 @@
       };
 
       /* =====================================================================
-         3. WEB AUDIO API SYNTHESIZER
+         MODULO 3: WEB AUDIO API SYNTHESIZER
          ===================================================================== */
       const AudioEngine = (() => {
         let ctx = null;
@@ -1081,7 +1652,7 @@
       })();
 
       /* =====================================================================
-         4. MOTORE DI STATO & REGOLE (GUARNIGIONI MISTE, CO-OP ALTERNATO)
+         MODULO 4: MOTORE DI STATO & REGOLE
          ===================================================================== */
       const GameState = (() => {
         const CARD_TYPES = ['Fante', 'Cavaliere', 'Artiglieria'];
@@ -1090,7 +1661,7 @@
           CHECKERBOARD: {
             id: 'CHECKERBOARD',
             name: 'Scacchiera Equilibrata (50/50)',
-            description: 'Ripartizione simmetrica continente per continente: ogni fazione ottiene esattamente metà di ciascun continente senza partire con continenti già conquistati.'
+            description: 'Ripartizione simmetrica continente per continente: ogni fazione ottiene metà di ciascun continente senza partire con continenti già conquistati.'
           },
           GEOPOLITICAL: {
             id: 'GEOPOLITICAL',
@@ -1180,7 +1751,6 @@
           let listB = [];
 
           if (patternId === 'GEOPOLITICAL') {
-            // Blocco Occidentale (America + Europa Occ/Centr + Africa Occ/Nord + avamposti) vs Blocco Orientale
             const westSeeds = new Set([
               'am_alaska', 'am_yukon', 'am_nwt', 'am_alberta', 'am_ontario', 'am_quebec', 'am_greenland',
               'am_wus', 'am_plains', 'am_eus', 'am_california', 'am_texas', 'am_mexico', 'am_central',
@@ -1190,12 +1760,10 @@
               'af_morocco', 'af_algeria', 'af_west', 'af_sahara', 'af_nigeria', 'af_congo', 'af_angola',
               'as_japan', 'as_sindia', 'oc_waustralia', 'oc_newzealand', 'oc_java'
             ]);
-            // Ordina per coordinata X per mantenere coerenza est-ovest se servono aggiustamenti di quota
             const sortedByX = [...allIds].sort((a, b) => MapData.TERRITORIES[a].x - MapData.TERRITORIES[b].x);
             listA = sortedByX.filter(id => westSeeds.has(id));
             listB = sortedByX.filter(id => !westSeeds.has(id));
           } else if (patternId === 'STRONGHOLDS') {
-            // Nuclei regionali contigui di ~5 territori alternati tra Fazione A e Fazione B
             const unassigned = new Set(allIds);
             const seeds = [
               'am_alberta', 'as_wsiberia', 'eu_central', 'af_sahara', 'am_brazil_n',
@@ -1239,7 +1807,6 @@
             listA = shuffled.slice(0, quotaA);
             listB = shuffled.slice(quotaA);
           } else {
-            // CHECKERBOARD (Default): Scacchiera equilibrata continente per continente (40 vs 40)
             let globalToggle = 0;
             contOrder.forEach(cid => {
               const inCont = allIds
@@ -1253,7 +1820,6 @@
             });
           }
 
-          // Bilanciamento fine alle quote esatte (es. 40/40, 42/38, 44/36)
           while (listA.length < quotaA && listB.length > 0) {
             const step = Math.max(1, Math.floor(listB.length / (quotaA - listA.length + 1)));
             const idx = Math.min(listB.length - 1, step);
@@ -1265,7 +1831,6 @@
             listB.push(listA.splice(idx, 1)[0]);
           }
 
-          // Ordina per continente in modo che, se ci sono più alleati in squadra, ognuno riceva territori su più continenti
           const sortForInterleave = (arr) => arr.sort((a, b) => {
             const ca = contOrder.indexOf(MapData.TERRITORIES[a].continent);
             const cb = contOrder.indexOf(MapData.TERRITORIES[b].continent);
@@ -1317,7 +1882,6 @@
             territories[tid] = { owner, garrison: { [owner]: 1 } };
           });
 
-          // Riserve iniziali calibrate sulle quote esatte
           const humans = participants.filter(p => !p.isAI);
           const baseTotal = humans.length <= 2 ? 64 : humans.length <= 4 ? 54 : humans.length <= 6 ? 44 : 36;
           participants.forEach(p => {
@@ -1336,7 +1900,6 @@
             }
           });
 
-          // Schieramento automatico iniziale dell'Armata Nera (alta densità su ogni territorio + confini)
           if (mode === 'COOP') {
             const aiPlayer = participants.find(p => p.isAI);
             const aiTerrs = Object.keys(territories).filter(tid => territories[tid].owner === 'nero');
@@ -1359,7 +1922,6 @@
             }
           }
 
-          // Mazzo 80 Carte Territorio + 2 Jolly
           const deck = MapData.TERRITORY_IDS.map((tid, idx) => ({
             id: `card_${tid}`,
             territoryId: tid,
@@ -1499,7 +2061,6 @@
             else attLosses++;
           }
 
-          // Perdite: prima i carri del proprietario, poi quelli prestati dagli alleati
           function applyCasualties(tState, losses) {
             let rem = losses;
             const own = tState.owner;
@@ -1548,7 +2109,6 @@
             state.pendingConquestAdvance = extra > 0 ? { fromId: originId, toId: targetId, extraAvailable: extra } : null;
           }
 
-          // Controllo vittoria
           const teamsAlive = new Set();
           Object.values(state.territories).forEach(t => {
             const p = state.participants.find(x => x.color === t.owner);
@@ -1563,7 +2123,6 @@
           return res;
         }
 
-        // Calcola l'indice del PROSSIMO giocatore vivo (gestendo turni alternati Co-op!)
         function getNextTurnPlayerIdx(state) {
           const isAlive = (p) => Object.values(state.territories).some(t => t.owner === p.color);
           const n = state.participants.length;
@@ -1572,12 +2131,10 @@
             const aiIdx = state.participants.findIndex(p => p.isAI);
             const curr = state.participants[state.activePlayerIdx];
             if (!curr.isAI) {
-              // Dopo un umano tocca sempre all'Armata Nera (se ancora viva)
               if (aiIdx >= 0 && isAlive(state.participants[aiIdx])) {
                 return { nextIdx: aiIdx, incrementRound: false };
               }
             }
-            // Dopo l'Armata Nera (o se IA eliminata) tocca al prossimo umano vivo dopo lastHumanIdx
             for (let step = 1; step <= n; step++) {
               const candIdx = (state.lastHumanIdx + step) % n;
               const cand = state.participants[candIdx];
@@ -1588,7 +2145,6 @@
             return { nextIdx: state.activePlayerIdx, incrementRound: false };
           }
 
-          // Modalità PvP standard a rotazione
           for (let step = 1; step <= n; step++) {
             const candIdx = (state.activePlayerIdx + step) % n;
             if (isAlive(state.participants[candIdx])) {
@@ -1607,7 +2163,7 @@
       })();
 
       /* =====================================================================
-         5. INTELLIGENZA ARTIFICIALE — ARMATA NERA (EURISTICA 1.7x)
+         MODULO 5: INTELLIGENZA ARTIFICIALE — ARMATA NERA (EURISTICA >= 1.7x)
          ===================================================================== */
       const BlackArmyAI = (() => {
         const sleep = (ms) => new Promise(r => setTimeout(r, ms));
@@ -1628,9 +2184,8 @@
 
           addLog(state, `🤖 Armata Nera riceve ${aiPlayer.reserveTanks} rinforzi.`);
           onStepUpdate(`Armata Nera schiera ${aiPlayer.reserveTanks} carri sui confini...`);
-          await sleep(550);
+          await sleep(500);
 
-          // Piazzamento euristico sui confini minacciati
           const aiTerrs = Object.keys(state.territories).filter(tid => state.territories[tid].owner === 'nero');
           while (aiPlayer.reserveTanks > 0 && aiTerrs.length > 0) {
             let bestTid = aiTerrs[0];
@@ -1645,7 +2200,7 @@
                 }
               });
               if (enemyBorders === 0) return;
-              const score = (enemyPressure * 1.4 - myTanks) + enemyBorders * 2.5 + Math.random() * 1.5;
+              const score = (enemyPressure * 1.45 - myTanks) + enemyBorders * 2.6 + Math.random() * 1.5;
               if (score > bestScore) { bestScore = score; bestTid = tid; }
             });
             state.territories[bestTid].garrison.nero += 1;
@@ -1653,9 +2208,8 @@
           }
           AudioEngine.playDeploy();
           onStepUpdate('Armata Nera valuta gli attacchi (soglia ≥ 1.7×)...');
-          await sleep(500);
+          await sleep(450);
 
-          // Attacchi euristici (soglia >= 1.7x o chiusura continente)
           state.phase = 'ATTACK';
           let attacks = 0;
           const maxAttacks = 8;
@@ -1675,7 +2229,7 @@
                 const contId = MapData.TERRITORIES[nid].continent;
                 const contTerrs = Object.values(MapData.TERRITORIES).filter(x => x.continent === contId);
                 const missing = contTerrs.filter(x => state.territories[x.id].owner !== 'nero').length;
-                const threshold = missing === 1 ? 1.35 : 1.65;
+                const threshold = missing === 1 ? 1.35 : 1.70;
 
                 if (ratio >= threshold) {
                   const score = ratio * 10 + (missing === 1 ? 25 : 0);
@@ -1712,10 +2266,9 @@
             }
 
             onStepUpdate(`Attacco IA: ${fromN} → ${toN}`);
-            await sleep(650);
+            await sleep(600);
           }
 
-          // Manovra dalle retrovie al fronte
           if (!state.winnerTeam) {
             state.phase = 'MANEUVER';
             let bestInt = null, maxSurplus = 1;
@@ -1749,13 +2302,20 @@
       })();
 
       /* =====================================================================
-         6. RENDERER SVG (MAPPA, CARRI PLASTICI, PAN/ZOOM, DADI 3D)
+         MODULO 6: RENDERER SVG + PAN/ZOOM MOUSE & MULTI-TOUCH (SOGLIA TAP 8PX)
          ===================================================================== */
       const Renderer = (() => {
         let transform = { x: 0, y: 0, scale: 1 };
-        let isPanning = false;
+        let isMousePanning = false;
         let startPan = { x: 0, y: 0 };
         let didDrag = false;
+
+        // Stato touch (pinch-to-zoom 2 dita + pan 1 dito con soglia 8px)
+        let touchMode = null; // 'PAN' | 'PINCH'
+        let touchStartPos = { x: 0, y: 0 };
+        let touchStartTransform = { x: 0, y: 0, scale: 1 };
+        let pinchStartDist = 0;
+        let pinchStartMid = { x: 0, y: 0 };
 
         function initMapSVG(onClick, onHover, onLeave) {
           const grat = document.getElementById('map-graticule');
@@ -1765,7 +2325,6 @@
           const orn = document.getElementById('map-ornaments');
           grat.innerHTML = sea.innerHTML = terr.innerHTML = labels.innerHTML = orn.innerHTML = '';
 
-          // Reticolato geografico
           for (let x = 100; x <= 1700; x += 160) {
             const l = document.createElementNS('http://www.w3.org/2000/svg', 'line');
             l.setAttribute('x1', x); l.setAttribute('y1', 15); l.setAttribute('x2', x); l.setAttribute('y2', 905);
@@ -1791,7 +2350,6 @@
             grat.appendChild(txt);
           });
 
-          // Rotte Navali Tratteggiate
           MapData.SEA_ROUTES.forEach(([a, b]) => {
             const tA = MapData.TERRITORIES[a], tB = MapData.TERRITORIES[b];
             if (!tA || !tB) return;
@@ -1811,14 +2369,17 @@
             sea.appendChild(l);
           });
 
-          // 80 Poligoni Territori + Etichette
           Object.values(MapData.TERRITORIES).forEach(t => {
             const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
             poly.setAttribute('id', `poly_${t.id}`);
             poly.setAttribute('points', t.points);
             poly.setAttribute('fill', t.fillShade);
             poly.setAttribute('class', 'territory-poly');
-            poly.addEventListener('click', (e) => { if (didDrag) return; e.stopPropagation(); onClick(t.id); });
+            poly.addEventListener('click', (e) => {
+              if (didDrag) return;
+              e.stopPropagation();
+              onClick(t.id);
+            });
             poly.addEventListener('mouseenter', () => onHover(t.id));
             poly.addEventListener('mouseleave', () => onLeave());
             terr.appendChild(poly);
@@ -1830,14 +2391,13 @@
             labels.appendChild(lbl);
           });
 
-          // Cartiglio, Tabella Classica Armate Continenti e Rosa dei Venti
           orn.innerHTML = `
             <g transform="translate(26, 795)">
               <rect x="0" y="0" width="248" height="94" rx="12" fill="#f3ead3" fill-opacity="0.94" stroke="#5c3e1c" stroke-width="2.4" />
               <rect x="5" y="5" width="238" height="84" rx="8" fill="none" stroke="#c59b27" stroke-width="1" />
               <text x="124" y="34" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-weight="900" font-size="19" fill="#781515" letter-spacing="1.2">RISIKO! ALLEANZE</text>
-              <text x="124" y="54" text-anchor="middle" font-family="Inter, sans-serif" font-weight="700" font-size="10.5" fill="#4a3210">80 TERRITORI · 5 CONTINENTI</text>
-              <text x="124" y="73" text-anchor="middle" font-family="Inter, sans-serif" font-weight="600" font-size="9.5" fill="#6b4c29">Plancia Strategica Mondiale</text>
+              <text x="124" y="54" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="700" font-size="10.5" fill="#4a3210">80 TERRITORI · 5 CONTINENTI</text>
+              <text x="124" y="73" text-anchor="middle" font-family="system-ui, sans-serif" font-weight="600" font-size="9.5" fill="#6b4c29">Plancia Strategica Mondiale</text>
             </g>
 
             <g transform="translate(595, 816)">
@@ -1846,24 +2406,24 @@
               <text x="192" y="15" text-anchor="middle" font-family="Cinzel, Georgia, serif" font-weight="800" font-size="11.5" fill="#241608" letter-spacing="1">ARMATE BONUS CONTINENTI</text>
 
               <rect x="12" y="30" width="112" height="20" rx="4" fill="#9ab352" stroke="#2c1e12" stroke-width="0.9" />
-              <text x="20" y="43.5" font-family="Inter, sans-serif" font-weight="700" font-size="10" fill="#1c1917">Asia (22)</text>
-              <text x="116" y="43.5" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800" font-size="10.5" fill="#1c1917">+10</text>
+              <text x="20" y="43.5" font-family="system-ui, sans-serif" font-weight="700" font-size="10" fill="#1c1917">Asia (22)</text>
+              <text x="116" y="43.5" text-anchor="end" font-family="monospace" font-weight="800" font-size="10.5" fill="#1c1917">+10</text>
 
               <rect x="136" y="30" width="114" height="20" rx="4" fill="#f0b84c" stroke="#2c1e12" stroke-width="0.9" />
-              <text x="144" y="43.5" font-family="Inter, sans-serif" font-weight="700" font-size="10" fill="#1c1917">America (22)</text>
-              <text x="242" y="43.5" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800" font-size="10.5" fill="#1c1917">+8</text>
+              <text x="144" y="43.5" font-family="system-ui, sans-serif" font-weight="700" font-size="10" fill="#1c1917">America (22)</text>
+              <text x="242" y="43.5" text-anchor="end" font-family="monospace" font-weight="800" font-size="10.5" fill="#1c1917">+8</text>
 
               <rect x="262" y="30" width="112" height="20" rx="4" fill="#7fa8d4" stroke="#2c1e12" stroke-width="0.9" />
-              <text x="270" y="43.5" font-family="Inter, sans-serif" font-weight="700" font-size="10" fill="#1c1917">Europa (15)</text>
-              <text x="366" y="43.5" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800" font-size="10.5" fill="#1c1917">+6</text>
+              <text x="270" y="43.5" font-family="system-ui, sans-serif" font-weight="700" font-size="10" fill="#1c1917">Europa (15)</text>
+              <text x="366" y="43.5" text-anchor="end" font-family="monospace" font-weight="800" font-size="10.5" fill="#1c1917">+6</text>
 
               <rect x="64" y="55" width="122" height="20" rx="4" fill="#dd8e4b" stroke="#2c1e12" stroke-width="0.9" />
-              <text x="72" y="68.5" font-family="Inter, sans-serif" font-weight="700" font-size="10" fill="#1c1917">Africa (13)</text>
-              <text x="178" y="68.5" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800" font-size="10.5" fill="#1c1917">+5</text>
+              <text x="72" y="68.5" font-family="system-ui, sans-serif" font-weight="700" font-size="10" fill="#1c1917">Africa (13)</text>
+              <text x="178" y="68.5" text-anchor="end" font-family="monospace" font-weight="800" font-size="10.5" fill="#1c1917">+5</text>
 
               <rect x="200" y="55" width="122" height="20" rx="4" fill="#df7b9b" stroke="#2c1e12" stroke-width="0.9" />
-              <text x="208" y="68.5" font-family="Inter, sans-serif" font-weight="700" font-size="10" fill="#1c1917">Oceania (8)</text>
-              <text x="314" y="68.5" text-anchor="end" font-family="JetBrains Mono, monospace" font-weight="800" font-size="10.5" fill="#1c1917">+3</text>
+              <text x="208" y="68.5" font-family="system-ui, sans-serif" font-weight="700" font-size="10" fill="#1c1917">Oceania (8)</text>
+              <text x="314" y="68.5" text-anchor="end" font-family="monospace" font-weight="800" font-size="10.5" fill="#1c1917">+3</text>
             </g>
 
             <g transform="translate(1155, 818)" opacity="0.72">
@@ -1921,7 +2481,7 @@
               ${tankPath}
               <g transform="translate(0, 12)">
                 <rect x="-13" y="-7" width="26" height="13" rx="6.5" fill="${ownerColorObj.hex}" stroke="${pillBorder}" stroke-width="1.3" />
-                <text x="0" y="2.5" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700" font-size="9.5" fill="${ownerColorObj.text}">${ownerCount}</text>
+                <text x="0" y="2.5" text-anchor="middle" font-family="monospace" font-weight="700" font-size="9.5" fill="${ownerColorObj.text}">${ownerCount}</text>
               </g>
             `;
 
@@ -1938,7 +2498,7 @@
                   </g>
                   <g transform="translate(0, 11)">
                     <rect x="-10" y="-6" width="20" height="11" rx="5.5" fill="${allyObj.hex}" stroke="#ffffff" stroke-width="1.1" />
-                    <text x="0" y="2" text-anchor="middle" font-family="JetBrains Mono, monospace" font-weight="700" font-size="8" fill="${allyObj.text}">+${allyCount}</text>
+                    <text x="0" y="2" text-anchor="middle" font-family="monospace" font-weight="700" font-size="8" fill="${allyObj.text}">+${allyCount}</text>
                   </g>
                 </g>
               `;
@@ -1950,49 +2510,121 @@
         }
 
         function setupPanZoom() {
-          const container = document.getElementById('map-container');
-          const viewport = document.getElementById('map-viewport');
-          const apply = () => viewport.setAttribute('transform', `translate(${transform.x}, ${transform.y}) scale(${transform.scale})`);
+          const container = document.getElementById('map-viewport');
+          const camera = document.getElementById('map-camera');
+          const apply = () => camera.setAttribute('transform', `translate(${transform.x}, ${transform.y}) scale(${transform.scale})`);
 
+          const screenToSVGDelta = (dxPx, dyPx) => {
+            const rect = container.getBoundingClientRect();
+            const scaleFit = Math.min(rect.width / 1800, rect.height / 920) || 1;
+            return { x: dxPx / scaleFit, y: dyPx / scaleFit };
+          };
+
+          const clientToSVGCoords = (clientX, clientY) => {
+            const rect = container.getBoundingClientRect();
+            const scaleFit = Math.min(rect.width / 1800, rect.height / 920) || 1;
+            const offsetX = (rect.width - 1800 * scaleFit) * 0.5;
+            const offsetY = (rect.height - 920 * scaleFit) * 0.5;
+            return {
+              x: (clientX - rect.left - offsetX) / scaleFit,
+              y: (clientY - rect.top - offsetY) / scaleFit
+            };
+          };
+
+          // Mouse Wheel Zoom
           container.addEventListener('wheel', (e) => {
             e.preventDefault();
-            const rect = container.getBoundingClientRect();
-            const svgX = ((e.clientX - rect.left) / rect.width) * 1800;
-            const svgY = ((e.clientY - rect.top) / rect.height) * 920;
-            const factor = e.deltaY < 0 ? 1.15 : 0.87;
-            const newScale = Math.min(3.4, Math.max(0.75, transform.scale * factor));
-            transform.x = svgX - (svgX - transform.x) * (newScale / transform.scale);
-            transform.y = svgY - (svgY - transform.y) * (newScale / transform.scale);
+            const pt = clientToSVGCoords(e.clientX, e.clientY);
+            const factor = e.deltaY < 0 ? 1.16 : 0.86;
+            const newScale = Math.min(3.6, Math.max(0.75, transform.scale * factor));
+            transform.x = pt.x - (pt.x - transform.x) * (newScale / transform.scale);
+            transform.y = pt.y - (pt.y - transform.y) * (newScale / transform.scale);
             transform.scale = newScale;
             apply();
           }, { passive: false });
 
-          container.addEventListener('pointerdown', (e) => {
-            isPanning = true;
+          // Mouse Drag Pan
+          container.addEventListener('mousedown', (e) => {
+            if (e.button !== 0) return;
+            isMousePanning = true;
             didDrag = false;
-            startPan = { x: e.clientX - transform.x, y: e.clientY - transform.y };
+            startPan = { x: e.clientX, y: e.clientY };
+            touchStartTransform = { ...transform };
           });
 
-          window.addEventListener('pointermove', (e) => {
-            if (!isPanning) return;
-            const dx = e.clientX - startPan.x;
-            const dy = e.clientY - startPan.y;
-            if (Math.abs(dx - transform.x) > 4 || Math.abs(dy - transform.y) > 4) didDrag = true;
-            transform.x = dx;
-            transform.y = dy;
-            apply();
+          window.addEventListener('mousemove', (e) => {
+            if (!isMousePanning) return;
+            const dxPx = e.clientX - startPan.x;
+            const dyPx = e.clientY - startPan.y;
+            if (Math.hypot(dxPx, dyPx) > 6) didDrag = true;
+            if (didDrag) {
+              const d = screenToSVGDelta(dxPx, dyPx);
+              transform.x = touchStartTransform.x + d.x;
+              transform.y = touchStartTransform.y + d.y;
+              apply();
+            }
           });
 
-          window.addEventListener('pointerup', () => {
-            isPanning = false;
+          window.addEventListener('mouseup', () => {
+            isMousePanning = false;
             setTimeout(() => { didDrag = false; }, 30);
           });
 
+          // Multi-Touch (Pinch-to-Zoom 2 dita + Pan 1 dito con soglia 8px per non annullare i tap!)
+          container.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+              touchMode = 'PAN';
+              didDrag = false;
+              touchStartPos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+              touchStartTransform = { ...transform };
+            } else if (e.touches.length === 2) {
+              touchMode = 'PINCH';
+              didDrag = true;
+              const t0 = e.touches[0], t1 = e.touches[1];
+              pinchStartDist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY) || 1;
+              pinchStartMid = clientToSVGCoords((t0.clientX + t1.clientX) * 0.5, (t0.clientY + t1.clientY) * 0.5);
+              touchStartTransform = { ...transform };
+            }
+          }, { passive: true });
+
+          container.addEventListener('touchmove', (e) => {
+            if (touchMode === 'PAN' && e.touches.length === 1) {
+              const dxPx = e.touches[0].clientX - touchStartPos.x;
+              const dyPx = e.touches[0].clientY - touchStartPos.y;
+              if (Math.hypot(dxPx, dyPx) > 8) {
+                didDrag = true;
+                e.preventDefault();
+                const d = screenToSVGDelta(dxPx, dyPx);
+                transform.x = touchStartTransform.x + d.x;
+                transform.y = touchStartTransform.y + d.y;
+                apply();
+              }
+            } else if (touchMode === 'PINCH' && e.touches.length === 2) {
+              e.preventDefault();
+              const t0 = e.touches[0], t1 = e.touches[1];
+              const curDist = Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY) || 1;
+              const curMid = clientToSVGCoords((t0.clientX + t1.clientX) * 0.5, (t0.clientY + t1.clientY) * 0.5);
+              const ratio = curDist / pinchStartDist;
+              const newScale = Math.min(3.6, Math.max(0.75, touchStartTransform.scale * ratio));
+              transform.scale = newScale;
+              transform.x = curMid.x - (pinchStartMid.x - touchStartTransform.x) * (newScale / touchStartTransform.scale);
+              transform.y = curMid.y - (pinchStartMid.y - touchStartTransform.y) * (newScale / touchStartTransform.scale);
+              apply();
+            }
+          }, { passive: false });
+
+          container.addEventListener('touchend', (e) => {
+            if (e.touches.length === 0) {
+              touchMode = null;
+              setTimeout(() => { didDrag = false; }, 40);
+            }
+          });
+
           document.getElementById('btn-zoom-in').addEventListener('click', () => {
-            transform.scale = Math.min(3.4, transform.scale * 1.22); apply();
+            transform.scale = Math.min(3.6, transform.scale * 1.24); apply();
           });
           document.getElementById('btn-zoom-out').addEventListener('click', () => {
-            transform.scale = Math.max(0.75, transform.scale * 0.82); apply();
+            transform.scale = Math.max(0.75, transform.scale * 0.8); apply();
           });
           document.getElementById('btn-zoom-reset').addEventListener('click', () => {
             transform = { x: 0, y: 0, scale: 1 }; apply();
@@ -2027,10 +2659,12 @@
       })();
 
       /* =====================================================================
-         7. GESTIONE STANZE LOCALE (CODICE A 5 CARATTERI + LOCALSTORAGE)
+         MODULO 7: MULTI-TAB LOBBY SYNC (BROADCASTCHANNEL + LOCALSTORAGE)
          ===================================================================== */
       const RoomStore = (() => {
         const PREFIX = 'risiko_alleanze_room_';
+        const channel = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('risiko_alleanze_sync') : null;
+
         function generateCode() {
           const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
           let c = '';
@@ -2038,7 +2672,10 @@
           return c;
         }
         function save(code, data) {
-          try { localStorage.setItem(PREFIX + code, JSON.stringify(data)); } catch (e) {}
+          try {
+            localStorage.setItem(PREFIX + code, JSON.stringify(data));
+            if (channel) channel.postMessage({ code, data });
+          } catch (e) {}
         }
         function load(code) {
           try {
@@ -2046,11 +2683,18 @@
             return raw ? JSON.parse(raw) : null;
           } catch (e) { return null; }
         }
-        return { generateCode, save, load };
+        function onSync(cb) {
+          if (channel) {
+            channel.onmessage = (ev) => {
+              if (ev.data && ev.data.code) cb(ev.data.code, ev.data.data);
+            };
+          }
+        }
+        return { generateCode, save, load, onSync };
       })();
 
       /* =====================================================================
-         8. CONTROLLER PRINCIPALE UI & FLUSSO DI GIOCO
+         MODULO 8: CONTROLLER PRINCIPALE UI & FLUSSO DI GIOCO
          ===================================================================== */
       let lobbyState = null;
       let gameState = null;
@@ -2062,40 +2706,37 @@
       function showToast(msg, type = 'info') {
         const box = document.getElementById('toast-container');
         const el = document.createElement('div');
-        const cls = {
-          info: 'bg-[#2c1e12] text-[#f3ead3] border-[#c59b27]',
-          success: 'bg-[#14532d] text-[#dcfce7] border-[#4ade80]',
-          warning: 'bg-[#78350f] text-[#fef3c7] border-[#f59e0b]',
-          error: 'bg-[#7f1d1d] text-[#fee2e2] border-[#f87171]'
+        const styles = {
+          info: 'background:#2c1e12; color:#f3ead3; border-color:#c59b27;',
+          success: 'background:#14532d; color:#dcfce7; border-color:#4ade80;',
+          warning: 'background:#78350f; color:#fef3c7; border-color:#f59e0b;',
+          error: 'background:#7f1d1d; color:#fee2e2; border-color:#f87171;'
         };
-        el.className = `px-4 py-2.5 rounded-xl border shadow-xl text-xs sm:text-sm font-semibold pointer-events-auto transition-all ${cls[type] || cls.info}`;
+        el.className = 'toast-item';
+        el.style.cssText = styles[type] || styles.info;
         el.textContent = msg;
         box.appendChild(el);
-        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 250); }, 3000);
+        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 250); }, 2900);
       }
 
       function openModal(title, html) {
         document.getElementById('modal-title').textContent = title;
         document.getElementById('modal-content').innerHTML = html;
-        const ov = document.getElementById('modal-overlay');
-        ov.classList.remove('hidden');
-        ov.classList.add('flex');
+        document.getElementById('modal-overlay').classList.remove('hidden');
       }
 
       function closeModal() {
-        const ov = document.getElementById('modal-overlay');
-        ov.classList.add('hidden');
-        ov.classList.remove('flex');
+        document.getElementById('modal-overlay').classList.add('hidden');
       }
 
       function openRulebookModal(tab = 'PVP') {
         openModal('Regolamento Ufficiale — Risiko! Alleanze', `
-          <div class="flex flex-col gap-4">
-            <div class="flex flex-wrap gap-2 border-b border-[#8c663b] pb-2">
-              <button id="tab-rule-pvp" class="px-4 py-2 rounded-xl font-cinzel font-bold text-xs sm:text-sm transition ${tab === 'PVP' ? 'bg-[#781515] text-[#f7e7b4]' : 'bg-[#e2cfa2] text-[#2c1e12]'}">
+          <div style="display:flex; flex-direction:column; gap:12px;">
+            <div style="display:flex; flex-wrap:wrap; gap:8px; border-bottom:1px solid #8c663b; padding-bottom:8px;">
+              <button id="tab-rule-pvp" style="padding:7px 14px; border-radius:10px; font-weight:800; font-size:12px; border:1px solid #781515; background:${tab === 'PVP' ? '#781515' : '#e2cfa2'}; color:${tab === 'PVP' ? '#f7e7b4' : '#2c1e12'};">
                 ⚔️ Manuale 1: PvP a Squadre (2–10)
               </button>
-              <button id="tab-rule-coop" class="px-4 py-2 rounded-xl font-cinzel font-bold text-xs sm:text-sm transition ${tab === 'COOP' ? 'bg-[#18181b] text-[#fca5a5]' : 'bg-[#e2cfa2] text-[#2c1e12]'}">
+              <button id="tab-rule-coop" style="padding:7px 14px; border-radius:10px; font-weight:800; font-size:12px; border:1px solid #18181b; background:${tab === 'COOP' ? '#18181b' : '#e2cfa2'}; color:${tab === 'COOP' ? '#fca5a5' : '#2c1e12'};">
                 🤖 Manuale 2: Co-op vs Armata Nera (1–4)
               </button>
             </div>
@@ -2107,11 +2748,25 @@
       }
 
       function showScreen(id) {
-        ['screen-home', 'screen-lobby', 'screen-game'].forEach(s => {
-          const el = document.getElementById(s);
-          if (s === id) { el.classList.remove('hidden'); el.classList.add('flex'); }
-          else { el.classList.add('hidden'); el.classList.remove('flex'); }
-        });
+        const home = document.getElementById('screen-home');
+        const lobby = document.getElementById('screen-lobby');
+        const game = document.getElementById('game-screen');
+
+        home.classList.add('hidden');
+        lobby.classList.add('hidden');
+        game.classList.add('hidden');
+        game.classList.remove('active');
+        document.body.classList.remove('in-game');
+
+        if (id === 'screen-home') {
+          home.classList.remove('hidden');
+        } else if (id === 'screen-lobby') {
+          lobby.classList.remove('hidden');
+        } else if (id === 'game-screen') {
+          game.classList.remove('hidden');
+          game.classList.add('active');
+          document.body.classList.add('in-game');
+        }
       }
 
       function addLog(state, text) {
@@ -2146,9 +2801,7 @@
           alliancesLocked = true;
         } else if (preset === 'QUICK_COOP_1') {
           mode = 'COOP';
-          players = [
-            { id: 'p1', name: hostName, color: 'rosso', team: 'ALPHA', ready: true, isHost: true }
-          ];
+          players = [{ id: 'p1', name: hostName, color: 'rosso', team: 'ALPHA', ready: true, isHost: true }];
           alliancesLocked = true;
         } else if (preset === 'QUICK_COOP') {
           mode = 'COOP';
@@ -2178,7 +2831,7 @@
         }
         const existing = RoomStore.load(code);
         if (!existing) {
-          showToast(`Stanza "${code}" non trovata in questo browser. Crea una nuova partita!`, 'error');
+          showToast(`Stanza "${code}" non trovata. Crea una nuova partita!`, 'error');
           return;
         }
         if (existing.players.length >= 10) {
@@ -2213,22 +2866,16 @@
 
         const pvpBtn = document.getElementById('mode-pvp-btn');
         const coopBtn = document.getElementById('mode-coop-btn');
-        pvpBtn.className = `p-3.5 rounded-xl border-2 text-left transition flex flex-col gap-1 ${
-          lobbyState.mode === 'PVP' ? 'border-[#781515] bg-[#fff5f5] shadow' : 'border-[#9c7649]/50 bg-white/40 opacity-75'
-        }`;
-        coopBtn.className = `p-3.5 rounded-xl border-2 text-left transition flex flex-col gap-1 ${
-          !coopAllowed ? 'opacity-40 cursor-not-allowed border-gray-400 bg-gray-200' :
-          lobbyState.mode === 'COOP' ? 'border-[#18181b] bg-[#f4f4f5] shadow' : 'border-[#9c7649]/50 bg-white/40 opacity-75'
-        }`;
+        pvpBtn.className = `mode-card ${lobbyState.mode === 'PVP' ? 'active-pvp' : ''}`;
+        coopBtn.className = `mode-card ${coopAllowed && lobbyState.mode === 'COOP' ? 'active-coop' : ''}`;
         coopBtn.disabled = !coopAllowed;
-        document.getElementById('coop-limit-badge').textContent = coopAllowed ? '1–4 Umani' : 'Bloccata (>4 Umani)';
+        document.getElementById('coop-limit-badge').textContent = coopAllowed ? '1–4 Umani' : 'Bloccata (>4)';
 
         const preview = lobbyState.players.map(p => ({ ...p, isAI: false }));
         if (lobbyState.mode === 'COOP') preview.push({ id: 'ai', name: 'Armata Nera', color: 'nero', team: 'BLACK_ARMY', isAI: true });
         const metrics = GameState.computeTeamMetrics(preview, lobbyState.mode);
         document.getElementById('lobby-balance-banner').textContent = metrics.summary;
 
-        // Aggiorna UI Pattern Predefinito e Barra Ripartizione
         const patSel = document.getElementById('lobby-pattern-select');
         const patId = lobbyState.deploymentPattern || 'CHECKERBOARD';
         patSel.value = patId;
@@ -2244,11 +2891,11 @@
         if (lobbyState.alliancesLocked) {
           lockBtn.textContent = '🔒 Alleanze Bloccate (Sblocca)';
           lockStatus.textContent = '🔒 Alleanze Permanenti Confermate';
-          lockStatus.className = 'text-xs font-bold text-[#15803d]';
+          lockStatus.style.color = '#15803d';
         } else {
           lockBtn.textContent = '🔓 Blocca Alleanze';
           lockStatus.textContent = '⚠️ Blocca le alleanze prima di iniziare';
-          lockStatus.className = 'text-xs font-bold text-[#8b1e1e]';
+          lockStatus.style.color = '#8b1e1e';
         }
 
         const grid = document.getElementById('lobby-players-grid');
@@ -2262,39 +2909,38 @@
           }).join('');
 
           const teamSel = lobbyState.mode === 'COOP'
-            ? `<span class="px-2.5 py-1 rounded-lg bg-[#15803d] text-white text-xs font-bold">🛡️ Alleanza Umana</span>`
+            ? `<span class="hud-pill" style="background:#15803d; color:#fff;">🛡️ Alleanza Umana</span>`
             : `<select data-act="team" data-i="${idx}" ${lobbyState.alliancesLocked ? 'disabled' : ''}
-                 class="px-2.5 py-1 rounded-lg border border-[#8c663b] bg-white text-xs font-bold ${p.team === 'ALPHA' ? 'text-[#781515]' : 'text-[#1e3a8a]'}">
+                 style="padding:3px 7px; border-radius:7px; border:1px solid #8c663b; background:#fff; font-size:11px; font-weight:800; color:${p.team === 'ALPHA' ? '#781515' : '#1e3a8a'};">
                  <option value="ALPHA" ${p.team === 'ALPHA' ? 'selected' : ''}>🔴 Squadra Alpha</option>
                  <option value="BETA" ${p.team === 'BETA' ? 'selected' : ''}>🔵 Squadra Beta</option>
                </select>`;
 
           const card = document.createElement('div');
-          card.className = 'p-3 rounded-xl bg-white/75 border border-[#9c7649] flex flex-col sm:flex-row sm:items-center justify-between gap-2.5';
+          card.className = 'player-row';
           card.innerHTML = `
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-xl border-2 border-[#2c1e12] flex items-center justify-center font-bold shadow-sm shrink-0"
-                   style="background:${cObj.hex}; color:${cObj.text};">${idx + 1}</div>
-              <div>
-                <div class="flex items-center gap-1.5">
+            <div style="display:flex; align-items:center; gap:9px; min-width:0;">
+              <div style="width:34px; height:34px; border-radius:9px; border:2px solid #2c1e12; display:flex; align-items:center; justify-content:center; font-weight:800; flex-shrink:0; background:${cObj.hex}; color:${cObj.text};">${idx + 1}</div>
+              <div style="min-width:0;">
+                <div style="display:flex; align-items:center; gap:5px;">
                   <input data-act="name" data-i="${idx}" type="text" maxlength="16" value="${p.name}"
-                    class="font-bold text-sm bg-transparent border-b border-transparent focus:border-[#781515] focus:outline-none w-32 sm:w-36" />
-                  ${p.isHost ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-[#c59b27] text-[#241608] font-bold">HOST</span>' : ''}
+                    style="font-weight:800; font-size:13px; background:transparent; border:none; border-bottom:1px solid #9c7649; width:125px;" />
+                  ${p.isHost ? '<span class="hud-pill" style="background:#c59b27; color:#241608;">HOST</span>' : ''}
                 </div>
-                <div class="mt-1 flex items-center gap-1.5">
-                  <select data-act="color" data-i="${idx}" class="text-[11px] px-2 py-0.5 rounded border border-[#9c7649] bg-[#faf4e4] font-semibold">
+                <div style="margin-top:4px; display:flex; flex-wrap:wrap; align-items:center; gap:5px;">
+                  <select data-act="color" data-i="${idx}" style="font-size:11px; padding:2px 6px; border-radius:6px; border:1px solid #9c7649; background:#faf4e4; font-weight:700;">
                     ${colorOpts}
                   </select>
                   ${teamSel}
                 </div>
               </div>
             </div>
-            <div class="flex items-center gap-1.5 self-end sm:self-center">
+            <div style="display:flex; align-items:center; gap:5px; flex-shrink:0;">
               <button data-act="ready" data-i="${idx}"
-                class="px-3 py-1.5 rounded-lg text-xs font-bold transition ${p.ready ? 'bg-[#16a34a] text-white' : 'bg-[#e5e7eb] text-[#374151] hover:bg-[#d1d5db]'}">
+                style="padding:6px 10px; border-radius:8px; border:none; font-size:11px; font-weight:800; background:${p.ready ? '#16a34a' : '#e5e7eb'}; color:${p.ready ? '#fff' : '#374151'};">
                 ${p.ready ? '✓ Pronto' : 'In attesa'}
               </button>
-              ${!p.isHost ? `<button data-act="remove" data-i="${idx}" class="px-2 py-1.5 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 text-xs font-bold">✕</button>` : ''}
+              ${!p.isHost ? `<button data-act="remove" data-i="${idx}" style="padding:6px 8px; border-radius:8px; border:none; background:#fee2e2; color:#b91c1c; font-size:11px; font-weight:800;">✕</button>` : ''}
             </div>
           `;
           grid.appendChild(card);
@@ -2302,16 +2948,17 @@
 
         if (lobbyState.mode === 'COOP') {
           const aiCard = document.createElement('div');
-          aiCard.className = 'p-3 rounded-xl bg-[#18181b] text-[#fca5a5] border-2 border-[#ef4444] flex items-center justify-between gap-2.5';
+          aiCard.className = 'player-row';
+          aiCard.style.cssText = 'background:#18181b; color:#fca5a5; border:2px solid #ef4444;';
           aiCard.innerHTML = `
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-xl bg-black border border-[#ef4444] flex items-center justify-center text-lg">🤖</div>
+            <div style="display:flex; align-items:center; gap:9px;">
+              <div style="width:34px; height:34px; border-radius:9px; background:#000; border:1px solid #ef4444; display:flex; align-items:center; justify-content:center; font-size:16px;">🤖</div>
               <div>
-                <div class="font-cinzel font-bold text-sm text-white">Armata Nera (IA)</div>
-                <div class="text-[11px] text-[#fca5a5]">${metrics.aiTerritories} Territori · ~${metrics.aiAvgDensity} carri/territorio · Turni alternati</div>
+                <div class="font-display" style="font-weight:800; font-size:13px; color:#fff;">Armata Nera (IA)</div>
+                <div style="font-size:11px; color:#fca5a5;">${metrics.aiTerritories} Territori · ~${metrics.aiAvgDensity} carri/terr. · Turni alternati</div>
               </div>
             </div>
-            <span class="px-2.5 py-1 rounded-lg bg-[#ef4444]/20 border border-[#ef4444] text-xs font-bold">✓ Pronta</span>
+            <span class="hud-pill" style="background:rgba(239,68,68,0.2); border:1px solid #ef4444; color:#fca5a5;">✓ Pronta</span>
           `;
           grid.appendChild(aiCard);
         }
@@ -2407,15 +3054,12 @@
         const teamBadge = document.getElementById('hud-active-team');
         teamBadge.textContent = active.team === 'ALPHA' ? (gameState.mode === 'COOP' ? 'Alleanza Umana' : 'Squadra Alpha')
           : active.team === 'BETA' ? 'Squadra Beta' : 'Armata Nera';
-        teamBadge.className = `px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider text-white ${
-          active.team === 'ALPHA' ? 'bg-[#991b1b]' : active.team === 'BETA' ? 'bg-[#1e40af]' : 'bg-[#18181b] border border-[#ef4444]'
-        }`;
+        teamBadge.style.background = active.team === 'ALPHA' ? '#991b1b' : active.team === 'BETA' ? '#1e40af' : '#18181b';
 
-        // Badge "Prossimo Turno"
         const nextBadge = document.getElementById('hud-next-turn-badge');
         if (gameState.phase === 'SETUP_DEPLOY') {
           const nextSetup = gameState.participants.find((p, i) => i > gameState.activePlayerIdx && !p.isAI && p.reserveTanks > 0);
-          nextBadge.textContent = nextSetup ? `Prossimo: ${nextSetup.name}` : 'Prossimo: Inizio Turno 1';
+          nextBadge.textContent = nextSetup ? `Prossimo: ${nextSetup.name}` : 'Prossimo: Turno 1';
         } else {
           const { nextIdx } = GameState.getNextTurnPlayerIdx(gameState);
           const nextP = gameState.participants[nextIdx];
@@ -2425,14 +3069,11 @@
         const ownedCount = Object.values(gameState.territories).filter(t => t.owner === active.color).length;
         const totalTanks = Object.values(gameState.territories).reduce((s, t) => s + (t.garrison[active.color] || 0), 0);
         document.getElementById('hud-turn-counter').textContent =
-          `Turno ${gameState.turnNumber} · Territori: ${ownedCount}/80 · Tuoi Carri: ${totalTanks}`;
+          `Turno ${gameState.turnNumber} · Territori: ${ownedCount}/80 · Carri: ${totalTanks}`;
         document.getElementById('hud-cards-count').textContent = active.cards.length;
 
         document.querySelectorAll('#hud-phase-stepper .phase-pill').forEach(pill => {
-          const cur = pill.dataset.phase === gameState.phase;
-          pill.className = `phase-pill px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
-            cur ? 'bg-[#c59b27] text-[#241608] shadow' : 'text-[#a89074]'
-          }`;
+          pill.classList.toggle('current', pill.dataset.phase === gameState.phase);
         });
 
         const { valid, mode } = getValidTargets();
@@ -2454,9 +3095,9 @@
           { val: 'MAX', label: 'MAX' }
         ];
         return `
-          <div class="flex rounded-xl overflow-hidden border border-[#8c663b]">
+          <div class="step-selector">
             ${steps.map(s => `
-              <button data-step="${s.val}" class="px-2.5 py-1.5 text-xs font-bold ${String(gameState.deployStep) === String(s.val) ? 'bg-[#2c1e12] text-white' : 'bg-white/75 text-[#2c1e12] hover:bg-white'}">
+              <button data-step="${s.val}" class="step-btn ${String(gameState.deployStep) === String(s.val) ? 'active' : ''}">
                 ${s.label}
               </button>
             `).join('')}
@@ -2478,25 +3119,23 @@
         const active = getActivePlayer();
 
         if (active.isAI) {
-          dock.innerHTML = `<div class="w-full text-center py-2 font-cinzel font-bold text-sm text-[#781515]">🤖 L'Armata Nera sta eseguendo le sue manovre strategiche...</div>`;
+          dock.innerHTML = `<div style="width:100%; text-align:center; padding:6px; font-weight:800; color:#781515;" class="font-display">🤖 L'Armata Nera sta eseguendo le sue manovre strategiche...</div>`;
           return;
         }
 
         // FASE 0: SCHIERAMENTO INIZIALE SEQUENZIALE
         if (gameState.phase === 'SETUP_DEPLOY') {
           dock.innerHTML = `
-            <div class="flex flex-wrap items-center gap-3">
-              <span class="px-3 py-1 rounded-xl bg-[#781515] text-[#f7e7b4] font-cinzel font-bold text-xs sm:text-sm">
-                Schieramento — ${active.name}
-              </span>
-              <span class="text-xs sm:text-sm font-semibold">
+            <div class="dock-group">
+              <span class="phase-badge-pill">Schieramento — ${active.name}</span>
+              <span style="font-size:13px; font-weight:600;">
                 Piazza tutta la tua riserva sui tuoi territori. Rimasti:
-                <strong class="font-mono-code text-base text-[#781515]">${active.reserveTanks}</strong>
+                <strong class="font-mono" style="font-size:16px; color:#781515;">${active.reserveTanks}</strong>
               </span>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
+            <div class="dock-group">
               ${renderStepButtonsHTML()}
-              <button id="btn-auto-deploy" class="btn-gold px-3.5 py-1.5 rounded-xl text-xs font-bold">
+              <button id="btn-auto-deploy" class="btn-gold" style="font-size:12px;">
                 ⚡ Distribuisci Restanti
               </button>
             </div>
@@ -2513,20 +3152,20 @@
           const mustRedeem = active.cards.length >= 5 && hasTris;
 
           dock.innerHTML = `
-            <div class="flex flex-wrap items-center gap-2.5 text-xs sm:text-sm">
-              <span class="px-3 py-1 rounded-xl bg-[#781515] text-[#f7e7b4] font-cinzel font-bold">1. Rinforzo</span>
+            <div class="dock-group" style="font-size:12px;">
+              <span class="phase-badge-pill">1. Rinforzo — ${active.name}</span>
               <span>
                 Base: <strong>+${bd.base}</strong> · Continenti: <strong>+${bd.continentBonus}</strong>
-                ${bd.balanceBonus > 0 ? ` · Bonus Squadra: <strong class="text-[#15803d]">+${bd.balanceBonus}</strong>` : ''}
+                ${bd.balanceBonus > 0 ? ` · Bonus Squadra: <strong style="color:#15803d;">+${bd.balanceBonus}</strong>` : ''}
               </span>
-              <span class="px-2.5 py-1 rounded-lg bg-white/80 border border-[#8c663b] font-bold">
-                Da piazzare: <strong class="font-mono-code text-base text-[#781515]">${active.reserveTanks}</strong>
+              <span style="padding:4px 9px; border-radius:8px; background:rgba(255,255,255,0.85); border:1px solid #8c663b; font-weight:700;">
+                Rimasti: <strong class="font-mono" style="font-size:15px; color:#781515;">${active.reserveTanks}</strong>
               </span>
             </div>
-            <div class="flex flex-wrap items-center gap-2">
-              ${hasTris ? `<button id="btn-redeem-tris" class="btn-gold px-3 py-1.5 rounded-xl text-xs font-bold animate-pulse">🃏 Riscatta Tris</button>` : ''}
+            <div class="dock-group">
+              ${hasTris ? `<button id="btn-redeem-tris" class="btn-gold" style="font-size:12px;">🃏 Riscatta Tris</button>` : ''}
               ${renderStepButtonsHTML()}
-              <button id="btn-to-diplo" ${active.reserveTanks > 0 || mustRedeem ? 'disabled' : ''} class="btn-board px-4 py-2 rounded-xl text-xs sm:text-sm font-bold">
+              <button id="btn-to-diplo" ${active.reserveTanks > 0 || mustRedeem ? 'disabled' : ''} class="btn-board" style="font-size:12px;">
                 Passa a Diplomazia →
               </button>
             </div>
@@ -2545,11 +3184,11 @@
           const teammates = gameState.participants.filter(p => p.team === active.team && p.color !== active.color);
           if (teammates.length === 0) {
             dock.innerHTML = `
-              <div class="text-xs sm:text-sm font-semibold">
-                <span class="px-3 py-1 rounded-xl bg-[#1e40af] text-white font-cinzel font-bold mr-2">2. Diplomazia</span>
+              <div class="dock-group" style="font-size:13px; font-weight:600;">
+                <span class="phase-badge-pill" style="background:#1e40af;">2. Diplomazia</span>
                 Nessun alleato umano in squadra.
               </div>
-              <button id="btn-to-attack" class="btn-board px-4 py-2 rounded-xl text-xs sm:text-sm font-bold">Passa ad Attacco →</button>
+              <button id="btn-to-attack" class="btn-board" style="font-size:12px;">Passa ad Attacco →</button>
             `;
             document.getElementById('btn-to-attack').addEventListener('click', () => {
               gameState.phase = 'ATTACK'; gameState.selectedOrigin = null; gameState.selectedTarget = null; renderGame();
@@ -2563,13 +3202,13 @@
             const targ = gameState.selectedTarget ? gameState.territories[gameState.selectedTarget] : null;
             const maxLoan = orig && orig.owner === active.color ? Math.max(0, GameState.getOwnerTanks(orig) - 1) : 0;
             subHTML = `
-              <div class="flex flex-wrap items-center gap-2 text-xs">
+              <div class="dock-group" style="font-size:12px;">
                 <span>Da tuo: <strong>${gameState.selectedOrigin ? MapData.TERRITORIES[gameState.selectedOrigin].name : 'Seleziona'}</strong></span>
                 <span>→ Alleato: <strong>${gameState.selectedTarget ? MapData.TERRITORIES[gameState.selectedTarget].name : 'Seleziona'}</strong></span>
                 ${maxLoan > 0 && targ ? `
-                  <input id="loan-slider" type="range" min="1" max="${maxLoan}" value="1" class="w-24 accent-[#15803d]" />
-                  <span id="loan-val" class="font-mono-code font-bold text-sm">1</span>
-                  <button id="btn-confirm-loan" class="px-3 py-1.5 rounded-xl bg-[#15803d] text-white font-bold">🤝 Presta</button>
+                  <input id="loan-slider" type="range" min="1" max="${maxLoan}" value="1" style="width:90px;" />
+                  <span id="loan-val" class="font-mono" style="font-weight:800; font-size:14px;">1</span>
+                  <button id="btn-confirm-loan" class="btn-gold" style="padding:6px 11px; font-size:12px;">🤝 Presta</button>
                 ` : ''}
               </div>
             `;
@@ -2579,33 +3218,33 @@
             );
             const mine = Object.keys(gameState.territories).filter(tid => gameState.territories[tid].owner === active.color);
             if (loaned.length === 0) {
-              subHTML = `<span class="text-xs italic text-[#5c432c]">Nessun carro attualmente in prestito presso alleati.</span>`;
+              subHTML = `<span style="font-size:12px; font-style:italic; color:#5c432c;">Nessun carro attualmente in prestito presso alleati.</span>`;
             } else {
               subHTML = `
-                <div class="flex flex-wrap items-center gap-2 text-xs">
-                  <select id="recall-from" class="px-2 py-1.5 rounded-lg border border-[#8c663b] bg-white font-semibold">
+                <div class="dock-group" style="font-size:12px;">
+                  <select id="recall-from" style="padding:5px 8px; border-radius:8px; border:1px solid #8c663b; background:#fff; font-weight:700;">
                     ${loaned.map(tid => `<option value="${tid}">${MapData.TERRITORIES[tid].name} (${gameState.territories[tid].garrison[active.color]} carri)</option>`).join('')}
                   </select>
                   <span>→</span>
-                  <select id="recall-to" class="px-2 py-1.5 rounded-lg border border-[#8c663b] bg-white font-semibold">
+                  <select id="recall-to" style="padding:5px 8px; border-radius:8px; border:1px solid #8c663b; background:#fff; font-weight:700;">
                     ${mine.map(tid => `<option value="${tid}">${MapData.TERRITORIES[tid].name}</option>`).join('')}
                   </select>
-                  <button id="btn-confirm-recall" class="px-3 py-1.5 rounded-xl bg-[#b45309] text-white font-bold">↩️ Ritira Carri</button>
+                  <button id="btn-confirm-recall" class="btn-gold" style="padding:6px 11px; font-size:12px;">↩️ Ritira Carri</button>
                 </div>
               `;
             }
           }
 
           dock.innerHTML = `
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="px-3 py-1 rounded-xl bg-[#15803d] text-white font-cinzel font-bold text-xs">2. Diplomazia</span>
-              <div class="flex rounded-xl overflow-hidden border border-[#8c663b]">
-                <button id="tab-d-loan" class="px-2.5 py-1 text-xs font-bold ${diplomacySubTab === 'LOAN' ? 'bg-[#2c1e12] text-white' : 'bg-white/70'}">Presta Carri</button>
-                <button id="tab-d-recall" class="px-2.5 py-1 text-xs font-bold ${diplomacySubTab === 'RECALL' ? 'bg-[#2c1e12] text-white' : 'bg-white/70'}">Ritira Carri</button>
+            <div class="dock-group">
+              <span class="phase-badge-pill" style="background:#15803d;">2. Diplomazia</span>
+              <div class="step-selector">
+                <button id="tab-d-loan" class="step-btn ${diplomacySubTab === 'LOAN' ? 'active' : ''}">Presta Carri</button>
+                <button id="tab-d-recall" class="step-btn ${diplomacySubTab === 'RECALL' ? 'active' : ''}">Ritira Carri</button>
               </div>
               ${subHTML}
             </div>
-            <button id="btn-to-attack" class="btn-board px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">Passa ad Attacco →</button>
+            <button id="btn-to-attack" class="btn-board" style="font-size:12px;">Passa ad Attacco →</button>
           `;
 
           document.getElementById('tab-d-loan').addEventListener('click', () => { diplomacySubTab = 'LOAN'; gameState.selectedOrigin = null; gameState.selectedTarget = null; renderGame(); });
@@ -2658,12 +3297,12 @@
           if (gameState.pendingConquestAdvance) {
             const { fromId, toId, extraAvailable } = gameState.pendingConquestAdvance;
             dock.innerHTML = `
-              <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
-                <span class="px-3 py-1 rounded-xl bg-[#15803d] text-white font-cinzel font-bold">🎉 Conquistato!</span>
+              <div class="dock-group" style="font-size:13px;">
+                <span class="phase-badge-pill" style="background:#15803d;">🎉 Conquistato!</span>
                 <span>Avanza carri extra da <strong>${MapData.TERRITORIES[fromId].name}</strong> a <strong>${MapData.TERRITORIES[toId].name}</strong>:</span>
-                <input id="adv-slider" type="range" min="0" max="${extraAvailable}" value="${extraAvailable}" class="w-28 accent-[#781515]" />
-                <span id="adv-val" class="font-mono-code font-bold text-base">+${extraAvailable}</span>
-                <button id="btn-confirm-adv" class="btn-board px-4 py-1.5 rounded-xl font-bold text-xs">Conferma Avanzata</button>
+                <input id="adv-slider" type="range" min="0" max="${extraAvailable}" value="${extraAvailable}" style="width:105px;" />
+                <span id="adv-val" class="font-mono" style="font-weight:800; font-size:15px;">+${extraAvailable}</span>
+                <button id="btn-confirm-adv" class="btn-board" style="font-size:12px;">Conferma Avanzata</button>
               </div>
             `;
             const as = document.getElementById('adv-slider');
@@ -2704,35 +3343,35 @@
           if (gameState.lastDiceResult) {
             const r = gameState.lastDiceResult;
             diceHTML = `
-              <div class="flex items-center gap-3 bg-[#e2cfa2]/80 px-3 py-1.5 rounded-2xl border border-[#8c663b]">
-                <div class="flex items-center gap-1.5">${r.attRolls.map(v => Renderer.render3DDiceHTML(v, 'red', isDiceRollingAnim)).join('')}</div>
-                <div class="text-center text-[11px] font-bold leading-tight">
-                  <div class="text-[#991b1b]">Att: -${r.attLosses}</div>
-                  <div class="text-[#1e3a8a]">Dif: -${r.defLosses}</div>
+              <div style="display:flex; align-items:center; gap:10px; background:rgba(226,207,162,0.85); padding:4px 10px; border-radius:12px; border:1px solid #8c663b;">
+                <div style="display:flex; gap:5px;">${r.attRolls.map(v => Renderer.render3DDiceHTML(v, 'red', isDiceRollingAnim)).join('')}</div>
+                <div style="text-align:center; font-size:11px; font-weight:800; line-height:1.2;">
+                  <div style="color:#991b1b;">Att: -${r.attLosses}</div>
+                  <div style="color:#1e3a8a;">Dif: -${r.defLosses}</div>
                 </div>
-                <div class="flex items-center gap-1.5">${r.defRolls.map(v => Renderer.render3DDiceHTML(v, 'blue', isDiceRollingAnim)).join('')}</div>
+                <div style="display:flex; gap:5px;">${r.defRolls.map(v => Renderer.render3DDiceHTML(v, 'blue', isDiceRollingAnim)).join('')}</div>
               </div>
             `;
           }
 
           dock.innerHTML = `
-            <div class="flex flex-wrap items-center gap-2.5 text-xs">
-              <span class="px-3 py-1 rounded-xl bg-[#991b1b] text-white font-cinzel font-bold">3. Attacco</span>
-              <div>
+            <div class="dock-group" style="font-size:12px;">
+              <span class="phase-badge-pill">3. Attacco</span>
+              <div style="text-align:left; line-height:1.3;">
                 <div>Origine: <strong>${gameState.selectedOrigin ? `${MapData.TERRITORIES[gameState.selectedOrigin].name} (${GameState.getTotalGarrison(orig.garrison)})` : 'Seleziona tuo'}</strong></div>
                 <div>Bersaglio: <strong>${gameState.selectedTarget ? `${MapData.TERRITORIES[gameState.selectedTarget].name} (${GameState.getTotalGarrison(targ.garrison)})` : 'Seleziona nemico'}</strong></div>
               </div>
               ${orig && targ && maxD >= 1 ? `
-                <div class="flex items-center gap-1 bg-white/75 p-1 rounded-xl border border-[#8c663b]">
+                <div class="step-selector">
                   ${[1, 2, 3].filter(n => n <= maxD).map(n => `
-                    <button data-dice="${n}" class="px-2.5 py-1 rounded-lg font-bold ${selectedAttackDice === n ? 'bg-[#991b1b] text-white' : 'text-[#2c1e12]'}">${n}D</button>
+                    <button data-dice="${n}" class="step-btn ${selectedAttackDice === n ? 'active' : ''}">${n}D</button>
                   `).join('')}
                 </div>
-                <button id="btn-roll" class="btn-board px-4 py-2 rounded-xl font-cinzel font-bold text-xs sm:text-sm">🎲 LANCIA I DADI</button>
+                <button id="btn-roll" class="btn-board font-display" style="font-size:12px;">🎲 LANCIA I DADI</button>
               ` : ''}
             </div>
             ${diceHTML}
-            <button id="btn-to-maneuver" class="btn-gold px-4 py-2 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap">Passa a Manovra →</button>
+            <button id="btn-to-maneuver" class="btn-gold" style="font-size:12px;">Passa a Manovra →</button>
           `;
 
           dock.querySelectorAll('[data-dice]').forEach(b => {
@@ -2759,7 +3398,7 @@
                   if (GameState.getTotalGarrison(gameState.territories[res.originId].garrison) < 2) gameState.selectedTarget = null;
                 }
                 renderGame();
-              }, 380);
+              }, 360);
             });
           }
 
@@ -2780,56 +3419,56 @@
           if (maneuverSubTab === 'FORTIFY') {
             const maxM = orig && orig.owner === active.color ? Math.max(0, GameState.getOwnerTanks(orig) - 1) : 0;
             subHTML = `
-              <div class="flex flex-wrap items-center gap-2 text-xs">
+              <div class="dock-group" style="font-size:12px;">
                 <span>Da: <strong>${gameState.selectedOrigin ? MapData.TERRITORIES[gameState.selectedOrigin].name : 'Seleziona tuo'}</strong></span>
                 <span>→ A: <strong>${gameState.selectedTarget ? MapData.TERRITORIES[gameState.selectedTarget].name : 'Destinazione'}</strong></span>
                 ${maxM > 0 && targ ? `
-                  <input id="fort-slider" type="range" min="1" max="${maxM}" value="1" class="w-24 accent-[#2c1e12]" />
-                  <span id="fort-val" class="font-mono-code font-bold text-sm">1</span>
-                  <button id="btn-confirm-fort" class="px-3 py-1.5 rounded-xl bg-[#2c1e12] text-white font-bold">Sposta Truppe</button>
+                  <input id="fort-slider" type="range" min="1" max="${maxM}" value="1" style="width:90px;" />
+                  <span id="fort-val" class="font-mono" style="font-weight:800; font-size:14px;">1</span>
+                  <button id="btn-confirm-fort" class="btn-dark" style="font-size:12px;">Sposta Truppe</button>
                 ` : ''}
               </div>
             `;
           } else if (maneuverSubTab === 'DONATE') {
             if (teammates.length === 0 || myTerrs.length <= 1) {
-              subHTML = `<span class="text-xs italic text-[#5c432c]">Servono almeno 1 alleato e almeno 2 territori posseduti.</span>`;
+              subHTML = `<span style="font-size:12px; font-style:italic; color:#5c432c;">Servono almeno 1 alleato e almeno 2 territori posseduti.</span>`;
             } else {
               subHTML = `
-                <div class="flex flex-wrap items-center gap-2 text-xs">
+                <div class="dock-group" style="font-size:12px;">
                   <span>Territorio: <strong>${gameState.selectedOrigin ? MapData.TERRITORIES[gameState.selectedOrigin].name : 'Clicca un tuo territorio'}</strong></span>
                   <span>→</span>
-                  <select id="donate-ally" class="px-2 py-1 rounded-lg border border-[#8c663b] bg-white font-semibold">
+                  <select id="donate-ally" style="padding:5px 8px; border-radius:8px; border:1px solid #8c663b; background:#fff; font-weight:700;">
                     ${teammates.map(tm => `<option value="${tm.color}">${tm.name} (${MapData.ALL_COLORS_MAP[tm.color].name})</option>`).join('')}
                   </select>
-                  ${gameState.selectedOrigin ? `<button id="btn-confirm-donate" class="px-3 py-1.5 rounded-xl bg-[#15803d] text-white font-bold">🎁 Dona & Converti</button>` : ''}
+                  ${gameState.selectedOrigin ? `<button id="btn-confirm-donate" class="btn-gold" style="font-size:12px;">🎁 Dona & Converti</button>` : ''}
                 </div>
               `;
             }
           } else if (maneuverSubTab === 'SWAP') {
             if (teammates.length === 0) {
-              subHTML = `<span class="text-xs italic text-[#5c432c]">Serve almeno 1 alleato per scambiare territori.</span>`;
+              subHTML = `<span style="font-size:12px; font-style:italic; color:#5c432c;">Serve almeno 1 alleato per scambiare territori.</span>`;
             } else {
               subHTML = `
-                <div class="flex flex-wrap items-center gap-2 text-xs">
+                <div class="dock-group" style="font-size:12px;">
                   <span>Tuo: <strong>${gameState.selectedOrigin ? MapData.TERRITORIES[gameState.selectedOrigin].name : 'Seleziona'}</strong></span>
                   <span>⇄ Alleato: <strong>${gameState.selectedTarget ? MapData.TERRITORIES[gameState.selectedTarget].name : 'Seleziona'}</strong></span>
-                  ${gameState.selectedOrigin && gameState.selectedTarget ? `<button id="btn-confirm-swap" class="px-3 py-1.5 rounded-xl bg-[#1e40af] text-white font-bold">🔄 Scambia Territori</button>` : ''}
+                  ${gameState.selectedOrigin && gameState.selectedTarget ? `<button id="btn-confirm-swap" class="btn-gold" style="font-size:12px;">🔄 Scambia Territori</button>` : ''}
                 </div>
               `;
             }
           }
 
           dock.innerHTML = `
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="px-3 py-1 rounded-xl bg-[#2c1e12] text-[#f3ead3] font-cinzel font-bold text-xs">4. Manovra</span>
-              <div class="flex rounded-xl overflow-hidden border border-[#8c663b]">
-                <button data-mtab="FORTIFY" class="px-2 py-1 text-xs font-bold ${maneuverSubTab === 'FORTIFY' ? 'bg-[#2c1e12] text-white' : 'bg-white/70'}">Sposta</button>
-                <button data-mtab="DONATE" class="px-2 py-1 text-xs font-bold ${maneuverSubTab === 'DONATE' ? 'bg-[#2c1e12] text-white' : 'bg-white/70'}">Dona Terr.</button>
-                <button data-mtab="SWAP" class="px-2 py-1 text-xs font-bold ${maneuverSubTab === 'SWAP' ? 'bg-[#2c1e12] text-white' : 'bg-white/70'}">Scambia Terr.</button>
+            <div class="dock-group">
+              <span class="phase-badge-pill" style="background:#2c1e12;">4. Manovra</span>
+              <div class="step-selector">
+                <button data-mtab="FORTIFY" class="step-btn ${maneuverSubTab === 'FORTIFY' ? 'active' : ''}">Sposta</button>
+                <button data-mtab="DONATE" class="step-btn ${maneuverSubTab === 'DONATE' ? 'active' : ''}">Dona Terr.</button>
+                <button data-mtab="SWAP" class="step-btn ${maneuverSubTab === 'SWAP' ? 'active' : ''}">Scambia Terr.</button>
               </div>
               ${subHTML}
             </div>
-            <button id="btn-end-turn" class="btn-board px-4 py-2 rounded-xl font-cinzel font-bold text-xs sm:text-sm whitespace-nowrap">✓ FINE TURNO</button>
+            <button id="btn-end-turn" class="btn-board font-display" style="font-size:12px;">✓ FINE TURNO</button>
           `;
 
           dock.querySelectorAll('[data-mtab]').forEach(b => {
@@ -2895,16 +3534,20 @@
         }
       }
 
-      /* ---------------- CLICK SUI TERRITORI ---------------- */
+      /* ---------------- CLICK / TAP SUI TERRITORI ---------------- */
       function handleTerritoryClick(tid) {
         if (!gameState || gameState.winnerTeam) return;
         const active = getActivePlayer();
         if (active.isAI) return;
 
+        // Su schermi touch mostra anche la scheda intel al tap
+        if (window.innerWidth <= 768) {
+          handleTerritoryHover(tid);
+        }
+
         const tState = gameState.territories[tid];
         const tPlayer = gameState.participants.find(p => p.color === tState.owner);
 
-        // PIAZZAMENTO INIZIALE SEQUENZIALE (G1 FINISCE TUTTI I SUOI, POI G2...)
         if (gameState.phase === 'SETUP_DEPLOY') {
           if (tState.owner !== active.color) {
             showToast('Puoi piazzare i carri iniziali solo sui tuoi territori!', 'warning');
@@ -2917,7 +3560,6 @@
           active.reserveTanks -= amt;
           AudioEngine.playDeploy();
 
-          // Passa al giocatore successivo SOLO quando questo ha esaurito la propria riserva!
           if (active.reserveTanks <= 0) {
             advanceSequentialSetup();
           }
@@ -2925,7 +3567,6 @@
           return;
         }
 
-        // FASE 1: RINFORZO
         if (gameState.phase === 'REINFORCE') {
           if (tState.owner !== active.color) {
             showToast('Seleziona un tuo territorio per schierare i rinforzi.', 'warning');
@@ -2943,7 +3584,6 @@
           return;
         }
 
-        // FASE 2: DIPLOMAZIA
         if (gameState.phase === 'DIPLOMACY' && diplomacySubTab === 'LOAN') {
           if (tState.owner === active.color) {
             if (GameState.getOwnerTanks(tState) < 2) {
@@ -2960,7 +3600,6 @@
           return;
         }
 
-        // FASE 3: ATTACCO
         if (gameState.phase === 'ATTACK') {
           if (gameState.pendingConquestAdvance) {
             showToast('Conferma prima quante truppe avanzare nel territorio conquistato.', 'warning');
@@ -2988,7 +3627,6 @@
           return;
         }
 
-        // FASE 4: MANOVRA
         if (gameState.phase === 'MANEUVER') {
           if (maneuverSubTab === 'FORTIFY') {
             if (tState.owner === active.color && (!gameState.selectedOrigin || gameState.selectedOrigin === tid)) {
@@ -3024,7 +3662,6 @@
           showToast(`Schieramento completato! Ora tocca a ${gameState.participants[nextIdx].name}.`, 'info');
           return;
         }
-        // Tutti i giocatori umani hanno schierato: inizia il Turno 1 dal primo umano!
         const firstHuman = gameState.participants.findIndex(p => !p.isAI);
         gameState.activePlayerIdx = firstHuman >= 0 ? firstHuman : 0;
         gameState.lastHumanIdx = gameState.activePlayerIdx;
@@ -3125,90 +3762,92 @@
         let rows = Object.entries(tState.garrison).map(([c, cnt]) => {
           const co = MapData.ALL_COLORS_MAP[c];
           const role = c === tState.owner ? 'Proprietario' : 'In Prestito';
-          return `<div class="flex items-center justify-between"><span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full inline-block border border-black/40" style="background:${co.hex}"></span><strong>${co.name}</strong> <span class="text-[10px] opacity-75">(${role})</span></span><span class="font-mono-code font-bold">${cnt}</span></div>`;
+          return `<div style="display:flex; justify-content:space-between; align-items:center;"><span><span style="display:inline-block; width:9px; height:9px; border-radius:50%; background:${co.hex}; border:1px solid #000; margin-right:5px;"></span><strong>${co.name}</strong> <span style="font-size:10px; opacity:0.75;">(${role})</span></span><span class="font-mono" style="font-weight:800;">${cnt}</span></div>`;
         }).join('');
-        rows += `<div class="border-t border-[#9c7649]/40 pt-1 mt-1 flex justify-between font-bold"><span>Difesa Totale:</span><span>${tot} carri</span></div>`;
+        rows += `<div style="border-top:1px solid rgba(156,118,73,0.4); padding-top:4px; margin-top:4px; display:flex; justify-content:space-between; font-weight:800;"><span>Difesa Totale:</span><span>${tot} carri</span></div>`;
         document.getElementById('intel-garrison').innerHTML = rows;
         document.getElementById('intel-neighbors').textContent = 'Confini: ' + tInfo.neighbors.map(n => MapData.TERRITORIES[n].name).join(', ');
         document.getElementById('territory-intel-card').classList.remove('hidden');
       }
 
       function handleTerritoryLeave() {
-        document.getElementById('territory-intel-card').classList.add('hidden');
+        if (window.innerWidth > 768) {
+          document.getElementById('territory-intel-card').classList.add('hidden');
+        }
       }
 
       function renderLogList() {
         const list = document.getElementById('game-log-list');
         if (!list || !gameState) return;
-        list.innerHTML = gameState.logs.map(i => `<div class="p-2 rounded-lg bg-white/65 border border-[#9c7649]/30"><span class="font-mono-code text-[10px] text-[#7c5832] mr-1">[${i.time}]</span><span>${i.text}</span></div>`).join('');
+        list.innerHTML = gameState.logs.map(i => `<div style="padding:5px 8px; border-radius:8px; background:rgba(255,255,255,0.7); border:1px solid rgba(156,118,73,0.3);"><span class="font-mono" style="font-size:10px; color:#7c5832; margin-right:4px;">[${i.time}]</span><span>${i.text}</span></div>`).join('');
       }
 
       function openCardsModal() {
         const active = getActivePlayer();
         const tris = GameState.findBestTris(active.cards);
         const cardsHTML = active.cards.length === 0
-          ? '<p class="text-sm italic text-[#5c432c]">Conquista almeno un territorio nel tuo turno per pescare una Carta Territorio.</p>'
-          : `<div class="grid grid-cols-2 sm:grid-cols-3 gap-3">${active.cards.map(c => `
-              <div class="parchment-card p-3 rounded-xl text-center">
-                <span class="text-2xl">${c.symbol === 'Fante' ? '💂' : c.symbol === 'Cavaliere' ? '🐎' : c.symbol === 'Artiglieria' ? '💣' : '🃏'}</span>
-                <div class="font-cinzel font-bold text-xs text-[#781515] mt-1">${c.territoryName}</div>
-                <div class="text-[11px] font-bold uppercase mt-1 px-2 py-0.5 rounded bg-[#e2cfa2]">${c.symbol}</div>
-              </div>`).join('')}</div>`;
-        openModal(`Carte Territorio — ${active.name}`, `
-          <div class="space-y-4">
+          ? '<p style="font-style:italic; color:#5c432c;">Conquista almeno un territorio nel tuo turno per pescare una Carta Territorio.</p>'
+          : `<div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(130px, 1fr)); gap:10px;">${active.cards.map(c => `
+              <div class="parchment-card" style="padding:10px; text-align:center;">
+                <span style="font-size:24px;">${c.symbol === 'Fante' ? '💂' : c.symbol === 'Cavaliere' ? '🐎' : c.symbol === 'Artiglieria' ? '💣' : '🃏'}</span>
+                <div class="font-display" style="font-weight:800; font-size:12px; color:#781515; margin-top:4px;">${c.territoryName}</div>
+                <div class="hud-pill" style="background:#e2cfa2; margin-top:4px;">${c.symbol}</div>
+              </div>
+            `).join('')}</div>`;
+
+        openModal(`Carte di ${active.name} (${active.cards.length})`, `
+          <div style="display:flex; flex-direction:column; gap:12px;">
             ${cardsHTML}
-            <div class="border-t border-[#8c663b] pt-3 flex items-center justify-between">
-              <span class="text-xs font-semibold">${tris ? `Tris pronto: ${tris.label}` : 'Servono 3 simboli uguali, 3 diversi o Coppia + Jolly.'}</span>
-              ${tris && gameState.phase === 'REINFORCE' ? `<button id="modal-redeem" class="btn-board px-4 py-2 rounded-xl text-xs font-bold">Riscatta (+${tris.bonus})</button>` : ''}
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; border-top:1px solid #8c663b; padding-top:10px; font-size:12px;">
+              <span>Tris: 3 Artiglieria (+6) · 3 Fanti (+8) · 3 Cavalieri/Misto (+10) · Coppia+Jolly (+12)</span>
+              ${tris && gameState.phase === 'REINFORCE' ? `<button id="modal-redeem-btn" class="btn-board">Riscatta ${tris.label}</button>` : ''}
             </div>
           </div>
         `);
-        const b = document.getElementById('modal-redeem');
-        if (b) b.addEventListener('click', () => { closeModal(); handleRedeemTris(); });
+        const btn = document.getElementById('modal-redeem-btn');
+        if (btn) btn.addEventListener('click', () => { closeModal(); handleRedeemTris(); });
       }
 
       function openContinentsModal() {
         const active = getActivePlayer();
-        const rows = Object.values(MapData.CONTINENTS).map(cont => {
-          const all = Object.values(MapData.TERRITORIES).filter(t => t.continent === cont.id);
-          const own = all.filter(t => gameState.territories[t.id].owner === active.color).length;
+        const rows = Object.values(MapData.CONTINENTS).map(c => {
+          const allT = Object.values(MapData.TERRITORIES).filter(t => t.continent === c.id);
+          const owned = allT.filter(t => gameState.territories[t.id].owner === active.color).length;
           return `
-            <div class="parchment-card p-3 rounded-xl flex items-center justify-between">
-              <div class="flex items-center gap-2.5">
-                <span class="w-5 h-5 rounded-md border border-[#2c1e12]" style="background:${cont.fill}"></span>
+            <div class="parchment-card" style="padding:10px 14px; display:flex; justify-content:space-between; align-items:center;">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <span style="width:16px; height:16px; border-radius:4px; border:1px solid #2c1e12; background:${c.fill};"></span>
                 <div>
-                  <div class="font-cinzel font-bold text-sm">${cont.name}</div>
-                  <div class="text-xs text-[#5c432c]">Tuoi territori: ${own} / ${all.length}</div>
+                  <strong class="font-display">${c.name}</strong>
+                  <div style="font-size:11px; color:#5c432c;">Possiedi ${owned} / ${allT.length} territori</div>
                 </div>
               </div>
-              <div class="text-right">
-                <span class="font-mono-code font-black text-base text-[#781515]">+${cont.bonus}</span>
-                <div class="text-[10px] font-bold uppercase ${own === all.length ? 'text-[#15803d]' : 'text-[#5c432c]'}">
-                  ${own === all.length ? '✓ Controllato' : 'Incompleto'}
-                </div>
-              </div>
+              <span class="hud-pill" style="background:${owned === allT.length ? '#16a34a' : '#2c1e12'}; color:#fff;">+${c.bonus} carri/turno</span>
             </div>
           `;
         }).join('');
-        openModal('5 Continenti Classici — 80 Territori', `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${rows}</div>`);
+        openModal('Tabella Bonus Continenti', `<div style="display:flex; flex-direction:column; gap:8px;">${rows}</div>`);
       }
 
       function renderVictoryModal() {
-        const teamName = gameState.winnerTeam === 'ALPHA' ? (gameState.mode === 'COOP' ? 'Alleanza Umana' : 'Squadra Alpha')
-          : gameState.winnerTeam === 'BETA' ? 'Squadra Beta' : 'Armata Nera (IA)';
-        const winners = gameState.participants.filter(p => p.team === gameState.winnerTeam).map(p => p.name).join(', ');
-        openModal('🏆 VITTORIA MONDIALE!', `
-          <div class="text-center py-4 space-y-4">
-            <div class="text-5xl">👑</div>
-            <h4 class="font-cinzel font-black text-2xl text-[#781515]">${teamName} Trionfa!</h4>
-            <p class="text-sm font-semibold">Comandanti Vittoriosi: <strong>${winners}</strong></p>
-            <button id="btn-vic-home" class="btn-board px-6 py-3 rounded-2xl font-cinzel font-bold text-sm">Torna al Menu Principale</button>
+        const label = gameState.winnerTeam === 'BLACK_ARMY' ? 'L’ARMATA NERA (IA)'
+          : gameState.mode === 'COOP' ? 'L’ALLEANZA UMANA'
+          : gameState.winnerTeam === 'ALPHA' ? 'SQUADRA ALPHA' : 'SQUADRA BETA';
+
+        openModal('🏆 Vittoria Mondiale!', `
+          <div style="text-align:center; padding:12px 0; display:flex; flex-direction:column; gap:14px; align-items:center;">
+            <div style="font-size:48px;">👑</div>
+            <h2 class="font-display" style="margin:0; font-size:24px; color:#781515;">${label} CONQUISTA IL MONDO!</h2>
+            <p style="margin:0; max-width:460px;">Tutti gli 80 territori dei 5 continenti sono sotto il controllo della fazione vincitrice al Turno ${gameState.turnNumber}.</p>
+            <button id="btn-victory-home" class="btn-board font-display" style="font-size:15px; padding:10px 22px;">Torna alla Schermata Iniziale</button>
           </div>
         `);
-        document.getElementById('btn-vic-home').addEventListener('click', () => { closeModal(); showScreen('screen-home'); });
+        document.getElementById('btn-victory-home').addEventListener('click', () => { closeModal(); showScreen('screen-home'); });
       }
 
-      /* ---------------- BOOTSTRAP ---------------- */
+      /* =====================================================================
+         INIZIALIZZAZIONE EVENTI GLOBALI
+         ===================================================================== */
       window.addEventListener('DOMContentLoaded', () => {
         Renderer.initMapSVG(handleTerritoryClick, handleTerritoryHover, handleTerritoryLeave);
         Renderer.setupPanZoom();
@@ -3216,93 +3855,114 @@
         document.getElementById('modal-close-btn').addEventListener('click', closeModal);
         document.getElementById('modal-overlay').addEventListener('click', (e) => { if (e.target.id === 'modal-overlay') closeModal(); });
 
-        // Home
-        document.getElementById('btn-create-room').addEventListener('click', () => createLobby());
-        document.getElementById('btn-join-room').addEventListener('click', joinLobby);
-        document.getElementById('btn-open-rules').addEventListener('click', () => openRulebookModal('PVP'));
+        document.getElementById('btn-create-room').addEventListener('click', () => createLobby(null));
         document.getElementById('btn-quick-pvp').addEventListener('click', () => createLobby('QUICK_PVP'));
         document.getElementById('btn-quick-coop-1').addEventListener('click', () => createLobby('QUICK_COOP_1'));
         document.getElementById('btn-quick-coop').addEventListener('click', () => createLobby('QUICK_COOP'));
+        document.getElementById('btn-join-room').addEventListener('click', joinLobby);
+        document.getElementById('btn-open-rules').addEventListener('click', () => openRulebookModal('PVP'));
+        document.getElementById('btn-lobby-rules').addEventListener('click', () => openRulebookModal(lobbyState?.mode === 'COOP' ? 'COOP' : 'PVP'));
 
-        // Lobby
-        document.getElementById('lobby-pattern-select').addEventListener('change', (e) => {
+        document.getElementById('btn-copy-code').addEventListener('click', () => {
           if (!lobbyState) return;
-          lobbyState.deploymentPattern = e.target.value;
-          AudioEngine.playDeploy();
+          const inp = document.createElement('input');
+          inp.value = lobbyState.roomCode;
+          document.body.appendChild(inp);
+          inp.select();
+          document.execCommand('copy');
+          inp.remove();
+          showToast(`Codice "${lobbyState.roomCode}" copiato!`, 'success');
+        });
+        document.getElementById('btn-leave-lobby').addEventListener('click', () => { lobbyState = null; showScreen('screen-home'); });
+
+        document.getElementById('mode-pvp-btn').addEventListener('click', () => {
+          if (!lobbyState) return;
+          lobbyState.mode = 'PVP';
           RoomStore.save(lobbyState.roomCode, lobbyState);
           renderLobby();
         });
-        document.getElementById('btn-copy-code').addEventListener('click', () => {
-          if (!lobbyState) return;
-          const t = document.createElement('textarea');
-          t.value = lobbyState.roomCode;
-          document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t);
-          showToast(`Codice ${lobbyState.roomCode} copiato!`, 'success');
-        });
-        document.getElementById('btn-leave-lobby').addEventListener('click', () => { lobbyState = null; showScreen('screen-home'); });
-        document.getElementById('mode-pvp-btn').addEventListener('click', () => { if (!lobbyState) return; lobbyState.mode = 'PVP'; renderLobby(); });
         document.getElementById('mode-coop-btn').addEventListener('click', () => {
-          if (!lobbyState) return;
-          if (lobbyState.players.length > 4) { showToast('Co-op consente al massimo 4 giocatori umani.', 'warning'); return; }
+          if (!lobbyState || lobbyState.players.length > 4) return;
           lobbyState.mode = 'COOP';
           lobbyState.players.forEach(p => { p.team = 'ALPHA'; });
+          RoomStore.save(lobbyState.roomCode, lobbyState);
           renderLobby();
         });
+
+        document.getElementById('lobby-pattern-select').addEventListener('change', (e) => {
+          if (!lobbyState) return;
+          lobbyState.deploymentPattern = e.target.value;
+          RoomStore.save(lobbyState.roomCode, lobbyState);
+          renderLobby();
+        });
+
         document.getElementById('btn-add-local-player').addEventListener('click', () => {
-          if (!lobbyState || lobbyState.players.length >= 10) { showToast('Massimo 10 giocatori.', 'warning'); return; }
-          const n = lobbyState.players.length + 1;
-          const a = lobbyState.players.filter(p => p.team === 'ALPHA').length;
-          const b = lobbyState.players.filter(p => p.team === 'BETA').length;
+          if (!lobbyState) return;
+          const max = lobbyState.mode === 'COOP' ? 4 : 10;
+          if (lobbyState.players.length >= max) {
+            showToast(lobbyState.mode === 'COOP' ? 'Massimo 4 umani in Co-op vs Armata Nera.' : 'Massimo 10 giocatori.', 'warning');
+            return;
+          }
+          const idx = lobbyState.players.length + 1;
+          const aCnt = lobbyState.players.filter(p => p.team === 'ALPHA').length;
+          const bCnt = lobbyState.players.filter(p => p.team === 'BETA').length;
           lobbyState.players.push({
-            id: 'p_' + Date.now() + '_' + n,
-            name: `Comandante ${n}`,
+            id: 'p_' + Date.now() + '_' + idx,
+            name: `Comandante ${idx}`,
             color: getNextFreeColor(lobbyState.players),
-            team: lobbyState.mode === 'COOP' ? 'ALPHA' : (a <= b ? 'ALPHA' : 'BETA'),
+            team: lobbyState.mode === 'COOP' ? 'ALPHA' : (aCnt <= bCnt ? 'ALPHA' : 'BETA'),
             ready: true,
             isHost: false
           });
-          if (lobbyState.mode === 'COOP' && lobbyState.players.length > 4) {
-            lobbyState.mode = 'PVP';
-            showToast('Oltre 4 umani: modalità impostata su PvP a Squadre.', 'info');
-          }
-          AudioEngine.playDeploy();
+          RoomStore.save(lobbyState.roomCode, lobbyState);
           renderLobby();
         });
+
         document.getElementById('btn-randomize-teams').addEventListener('click', () => {
-          if (!lobbyState) return;
-          if (lobbyState.mode === 'COOP') { showToast('In Co-op tutti gli umani sono alleati!', 'info'); return; }
-          if (lobbyState.alliancesLocked) { showToast('Sblocca le alleanze prima di rimescolare.', 'warning'); return; }
+          if (!lobbyState || lobbyState.mode === 'COOP') return;
+          if (lobbyState.alliancesLocked) { showToast('Sblocca prima le alleanze!', 'warning'); return; }
           const sh = [...lobbyState.players].sort(() => Math.random() - 0.5);
-          sh.forEach((p, idx) => { p.team = idx % 2 === 0 ? 'ALPHA' : 'BETA'; });
-          AudioEngine.playDiplomacy();
+          sh.forEach((p, i) => { p.team = i % 2 === 0 ? 'ALPHA' : 'BETA'; });
+          RoomStore.save(lobbyState.roomCode, lobbyState);
           renderLobby();
         });
+
         document.getElementById('btn-toggle-lock-teams').addEventListener('click', () => {
           if (!lobbyState) return;
           lobbyState.alliancesLocked = !lobbyState.alliancesLocked;
           AudioEngine.playDiplomacy();
+          RoomStore.save(lobbyState.roomCode, lobbyState);
           renderLobby();
         });
-        document.getElementById('btn-lobby-rules').addEventListener('click', () => openRulebookModal(lobbyState && lobbyState.mode === 'COOP' ? 'COOP' : 'PVP'));
+
         document.getElementById('btn-start-match').addEventListener('click', () => {
           if (!lobbyState) return;
           gameState = GameState.createNewMatch(lobbyState);
           AudioEngine.playConquest();
-          showScreen('screen-game');
+          showScreen('game-screen');
           renderGame();
         });
 
-        // Game HUD
         document.getElementById('btn-hud-cards').addEventListener('click', openCardsModal);
         document.getElementById('btn-hud-continents').addEventListener('click', openContinentsModal);
-        document.getElementById('btn-hud-rules').addEventListener('click', () => openRulebookModal(gameState && gameState.mode === 'COOP' ? 'COOP' : 'PVP'));
+        document.getElementById('btn-hud-rules').addEventListener('click', () => openRulebookModal(gameState?.mode === 'COOP' ? 'COOP' : 'PVP'));
         document.getElementById('btn-hud-log').addEventListener('click', () => document.getElementById('game-log-drawer').classList.toggle('hidden'));
         document.getElementById('btn-close-log').addEventListener('click', () => document.getElementById('game-log-drawer').classList.add('hidden'));
         document.getElementById('btn-hud-audio').addEventListener('click', (e) => {
-          const isM = AudioEngine.toggleMute();
-          e.currentTarget.textContent = isM ? '🔇' : '🔊';
+          const muted = AudioEngine.toggleMute();
+          e.currentTarget.textContent = muted ? '🔇' : '🔊';
         });
-        document.getElementById('btn-hud-exit').addEventListener('click', () => { gameState = null; lobbyState = null; showScreen('screen-home'); });
+        document.getElementById('btn-hud-exit').addEventListener('click', () => {
+          if (lobbyState) { showScreen('screen-lobby'); renderLobby(); }
+          else { showScreen('screen-home'); }
+        });
+
+        RoomStore.onSync((code, data) => {
+          if (lobbyState && lobbyState.roomCode === code) {
+            lobbyState = data;
+            if (!document.getElementById('screen-lobby').classList.contains('hidden')) renderLobby();
+          }
+        });
       });
     })();
   </script>
